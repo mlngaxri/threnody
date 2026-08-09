@@ -1,26 +1,26 @@
-=== /entries/no-such-entry -> 200
-  x-matched-path: /entries/[slug]
+=== /entries/no-such-entry -> 404
+  x-matched-path: /404
   x-vercel-cache: MISS
   x-nextjs-prerender: null
-  cache-control: private, no-cache, no-store, max-age=0, must-revalidate
+  cache-control: public, max-age=0, must-revalidate
   content-type: text/html; charset=utf-8
-  title: Entry not found | THRENODY
-  bytes: 37398
+  title: No signal | THRENODY
+  bytes: 56584
   has NOT IN THE ARCHIVE: true
 
-=== /categories/no-such-category -> 200
-  x-matched-path: /categories/[slug]
-  x-vercel-cache: MISS
+=== /categories/no-such-category -> 404
+  x-matched-path: /404
+  x-vercel-cache: HIT
   x-nextjs-prerender: null
-  cache-control: private, no-cache, no-store, max-age=0, must-revalidate
+  cache-control: public, max-age=0, must-revalidate
   content-type: text/html; charset=utf-8
-  title: Category not found | THRENODY
-  bytes: 36579
+  title: No signal | THRENODY
+  bytes: 56584
   has NOT IN THE ARCHIVE: true
 
 === /no-such-page -> 404
   x-matched-path: /404
-  x-vercel-cache: MISS
+  x-vercel-cache: HIT
   x-nextjs-prerender: null
   cache-control: public, max-age=0, must-revalidate
   content-type: text/html; charset=utf-8
