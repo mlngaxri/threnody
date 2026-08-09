@@ -1,0 +1,42 @@
+name: Capture build log
+
+on:
+  push:
+    paths-ignore:
+      - "BUILD_LOG.txt"
+      - "VERIFY.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: npm install 2>&1 | tail -5
+
+      - name: Build
+        run: |
+          {
+            echo "===== tsc --noEmit ====="
+            npx tsc --noEmit 2>&1 || echo "[tsc exited $?]"
+            echo
+            echo "===== next build ====="
+            npx next build 2>&1 || echo "[next build exited $?]"
+          } > BUILD_LOG.txt
+          tail -20 BUILD_LOG.txt
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add BUILD_LOG.txt
+          git commit -m "CI: capture build log" || echo "no change"
+          git push
