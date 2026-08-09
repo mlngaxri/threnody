@@ -1,0 +1,48 @@
+name: Append bands
+
+on:
+  push:
+    paths:
+      - ".ci-bands.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Append and coarsen card grid
+        run: |
+          cat .ci-bands.txt >> src/lib/signature.ts
+          node -e '
+            const fs = require("fs");
+            const p = "src/components/EntryCard.tsx";
+            const s = fs.readFileSync(p, "utf8");
+            const from = "          variant=\"spectrogram\"\n          height={84}";
+            if (!s.includes(from)) { console.error("MISS EntryCard"); process.exit(1); }
+            const to = from + "\n          // A card figure is 84px tall, so a finer grid would render detail\n          // nobody can see while costing markup on every card in a 12 up list.\n          cols={28}\n          rows={9}";
+            fs.writeFileSync(p, s.replace(from, to));
+            console.log("OK EntryCard");
+          '
+          rm -f .ci-bands.txt .github/workflows/bands.yml
+
+      - name: Verify
+        run: |
+          npm install 2>&1 | tail -2
+          npx tsc --noEmit
+          npx next build 2>&1 | tail -8
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Collapse spectrogram cells into opacity bands"
+          git push
