@@ -54,14 +54,14 @@ PASS header permissions-policy
 
 ===== contact endpoint =====
 complete valid payload -> 201
-{"ok":true,"data":{"reference":"THR-2026-1Q8SFC0","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-1R9X85X","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS valid contact accepted
 PASS contact returns a reference
 invalid payload -> 422
 {"ok":false,"error":{"code":"VALIDATION_FAILED","message":"Please correct the highlighted fields.","fields":{"name":"Please enter your name.","email":"Please enter a valid email address, for example name@example.org.","message":"Message must be at least 20 characters. You have 2."}}}
 PASS invalid contact returns 422
 html in fields -> 201
-{"ok":true,"data":{"reference":"THR-2026-06P1JDP","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-0FU0X9O","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS no raw script tag echoed back
 
 ===== robots =====
