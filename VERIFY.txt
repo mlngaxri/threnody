@@ -1,113 +1,170 @@
-BASE https://threnody-b3h4s2bwm-rexs-projects-941bfa7c.vercel.app
+BASE https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
 
 ===== route status =====
-302  /                                              text/plain                 15
-FAIL status 200 / got 302
-302  /atlas                                         text/plain                 15
-FAIL status 200 /atlas got 302
-302  /timeline                                      text/plain                 15
-FAIL status 200 /timeline got 302
-302  /categories                                    text/plain                 15
-FAIL status 200 /categories got 302
-302  /contributors                                  text/plain                 15
-FAIL status 200 /contributors got 302
-302  /method                                        text/plain                 15
-FAIL status 200 /method got 302
-302  /api-docs                                      text/plain                 15
-FAIL status 200 /api-docs got 302
-302  /search                                        text/plain                 15
-FAIL status 200 /search got 302
-302  /contact                                       text/plain                 15
-FAIL status 200 /contact got 302
-302  /categories/extinct-voices                     text/plain                 15
-FAIL status 200 /categories/extinct-voices got 302
-302  /entries/kauai-oo-final-duet                   text/plain                 15
-FAIL status 200 /entries/kauai-oo-final-duet got 302
-302  /entries/dial-up-handshake                     text/plain                 15
-FAIL status 200 /entries/dial-up-handshake got 302
-302  /sitemap.xml                                   text/plain                 15
-FAIL status 200 /sitemap.xml got 302
-302  /feed.xml                                      text/plain                 15
-FAIL status 200 /feed.xml got 302
-302  /robots.txt                                    text/plain                 15
-FAIL status 200 /robots.txt got 302
-302  /manifest.webmanifest                          text/plain                 15
-FAIL status 200 /manifest.webmanifest got 302
-302  /icon                                          text/plain                 15
-FAIL status 200 /icon got 302
-302  /opengraph-image                               text/plain                 15
-FAIL status 200 /opengraph-image got 302
-302  /entries/kauai-oo-final-duet/opengraph-image   text/plain                 15
-FAIL status 200 /entries/kauai-oo-final-duet/opengraph-image got 302
+200  /                                                text/html                  903087
+PASS 200 /
+200  /atlas                                           text/html                  1811521
+PASS 200 /atlas
+200  /timeline                                        text/html                  455824
+PASS 200 /timeline
+200  /categories                                      text/html                  52083
+PASS 200 /categories
+200  /contributors                                    text/html                  118431
+PASS 200 /contributors
+200  /method                                          text/html                  55368
+PASS 200 /method
+200  /api-docs                                        text/html                  82129
+PASS 200 /api-docs
+200  /search                                          text/html                  46149
+PASS 200 /search
+200  /contact                                         text/html                  46564
+PASS 200 /contact
+200  /categories/extinct-voices                       text/html                  214722
+PASS 200 /categories/extinct-voices
+200  /categories/obsolete-machines                    text/html                  482029
+PASS 200 /categories/obsolete-machines
+200  /entries/kauai-oo-final-duet                     text/html                  112654
+PASS 200 /entries/kauai-oo-final-duet
+200  /entries/dial-up-handshake                       text/html                  111834
+PASS 200 /entries/dial-up-handshake
+200  /sitemap.xml                                     application/xml            5009
+PASS 200 /sitemap.xml
+200  /feed.xml                                        application/rss+xml        7975
+PASS 200 /feed.xml
+200  /robots.txt                                      text/plain                 82
+PASS 200 /robots.txt
+200  /manifest.webmanifest                            application/manifest+json  620
+PASS 200 /manifest.webmanifest
+200  /icon                                            image/svg+xml              3952
+PASS 200 /icon
+200  /opengraph-image                                 image/png                  36200
+PASS 200 /opengraph-image
+200  /entries/kauai-oo-final-duet/opengraph-image     image/png                  31472
+PASS 200 /entries/kauai-oo-final-duet/opengraph-image
 
-===== content assertions =====
-FAIL home mentions THRENODY 
-FAIL home has a title tag 
-FAIL home has a meta description 
-FAIL home has JSON-LD 
-FAIL home has lang attribute 
-FAIL home has a skip link 
-PASS no em dash anywhere on home
-PASS no en dash anywhere on home
-FAIL sitemap is xml 
-sitemap urls: 0
-FAIL feed is rss 
-FAIL feed has items 
-feed items: 0
+===== html quality =====
+PASS home names THRENODY
+PASS home has <title>
+PASS home has meta description
+PASS home has JSON-LD
+PASS home has html lang
+PASS home has og:title
+PASS home has canonical
+PASS home has an h1
+PASS home has a main landmark
+PASS home has a nav landmark
+PASS no em or en dash on any page
+
+===== entry page =====
+PASS entry has an svg waveform
+PASS entry states a fidelity grade
+PASS entry has JSON-LD
+
+===== feeds =====
+PASS sitemap is a urlset
+sitemap urls: 27
+sitemap entry urls: 12
+PASS sitemap lists exactly 12 entries
+PASS feed is rss
+feed items: 12
+PASS feed has 12 items
+PASS feed escapes bare ampersands
+
 robots.txt:
-Redirecting...
+User-Agent: *
+Disallow: /
 
+Sitemap: https://threnody-theta.vercel.app/sitemap.xml
+
+manifest:
+{"name":"THRENODY: an atlas of sounds that no longer exist","short_name":"THRENODY","description":"An acoustic archaeology archive. Fourteen vanished sounds, each graded by how much of it is evidence and how much is inference.","start_url":"/","scope":"/","display":"standalone","orientation":"any","background_color":"#0a0a0b","theme_color":"#0a0a0b","lang":"en","categories":["education","music","r
 
 ===== draft leakage =====
-PASS no obvious draft slug in sitemap
+PASS no draft url in sitemap
 
 ===== api =====
-200 /api/health
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+--- 200 /api/health  [application/json]
+{"ok":true,"data":{"status":"healthy","version":"1.0.0","uptimeSeconds":0,"checks":{"content":true,"categories":true,"search":true},"entries":12,"categories":6,"timestamp":"2026-08-09T10:25:10.630Z"}}
 
-200 /api/site-config
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/health returns json
+--- 200 /api/site-config  [application/json]
+{"ok":true,"data":{"name":"THRENODY","tagline":"An atlas of sounds that no longer exist.","description":"THRENODY is an acoustic archaeology archive. It maps sounds that have left the world: extinct animal calls, silenced landscapes, obsolete machinery, abandoned rituals, unplayed instruments and dead radio signals. Each one is reconstructed so it can be heard again, and each is labelled plainly with how much of what you hear is evidence and how much is inference.","locales":["en","fr"],"defaultLocale":"en","socialHandle":"@threnody_atlas","featuredSlug":"kauai-oo-final-duet","totalEntries":12,"yearRange":{"earliest":1500,"latest":2024},"categories":[{"slug":"extinct-voices","name":"Extinct Voices","entryCount":2},{"slug":"silenced-places","name":"Silenced Places","entryCount":2},{"slug":"obsolete-machines","name":"Obsolete Machines","entryCount":3},{"slug":"vanished-rituals","name":"Van
 
-200 /api/categories
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/site-config returns json
+--- 200 /api/categories  [application/json]
+{"ok":true,"data":[{"id":"extinct-voices","name":"Extinct Voices","slug":"extinct-voices","tagline":"Animals whose calls ended with them.","description":"Every species that vocalised carried a signature no other species could produce. When the last individual died, that signature left the world permanently. This section holds the ones we can still partially recover, from tape, from notation, or from the physics of a preserved syrinx.","accent":"amber","order":1,"entryCount":2},{"id":"silenced-places","name":"Silenced Places","slug":"silenced-places","tagline":"Landscapes that stopped sounding like themselves.","description":"A place has an acoustic fingerprint built from its water, its wind shear, its vegetation density and its animals. Drain the sea, fell the canopy or pour the concrete and the fingerprint is gone even though the coordinates remain. These are recordings of geography tha
 
-200 /api/content
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/categories returns json
+--- 200 /api/content  [application/json]
+{"ok":true,"data":[{"slug":"kauai-oo-final-duet","title":"The Kauaʻi ʻōʻō's Final Duet","epithet":"A mating call answered by nothing","description":"The last male Kauaʻi ʻōʻō sang a duet that had no second part, because the female half of the species was already gone.","category":"extinct-voices","tags":["birdsong","hawaii","duet","habitat-loss","1987"],"fidelity":"field-recording","featured":true,"status":"published","publishedAt":"2026-01-12","updatedAt":"2026-05-04","readingMinutes":3,"place":"Alakaʻi Wilderness Preserve","region":"Kauaʻi, Hawaiʻi","lastHeard":1987,"lat":22.13,"lon":-159.55},{"slug":"aral-sea-shoreline-1975","title":"The Aral Shore at Dusk, 1975","epithet":"Forty thousand square kilometres of water noise","description":"Before the diversion of the Amu Darya, the Aral Sea produced a continuous low surf that residents of Moynaq used to navigate home in the dark.","categ
 
-200 /api/timeline
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/content returns json
+--- 200 /api/content?limit=2  [application/json]
+{"ok":true,"data":[{"slug":"kauai-oo-final-duet","title":"The Kauaʻi ʻōʻō's Final Duet","epithet":"A mating call answered by nothing","description":"The last male Kauaʻi ʻōʻō sang a duet that had no second part, because the female half of the species was already gone.","category":"extinct-voices","tags":["birdsong","hawaii","duet","habitat-loss","1987"],"fidelity":"field-recording","featured":true,"status":"published","publishedAt":"2026-01-12","updatedAt":"2026-05-04","readingMinutes":3,"place":"Alakaʻi Wilderness Preserve","region":"Kauaʻi, Hawaiʻi","lastHeard":1987,"lat":22.13,"lon":-159.55},{"slug":"aral-sea-shoreline-1975","title":"The Aral Shore at Dusk, 1975","epithet":"Forty thousand square kilometres of water noise","description":"Before the diversion of the Amu Darya, the Aral Sea produced a continuous low surf that residents of Moynaq used to navigate home in the dark.","categ
 
-200 /api/content/kauai-oo-final-duet
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/content?limit=2 returns json
+--- 200 /api/timeline  [application/json]
+{"ok":true,"data":[{"band":"Before 1800","from":0,"to":1799,"entries":[{"slug":"moa-bone-flute","title":"The Moa Bone Kōauau","year":1500,"category":"lost-instruments"}]},{"band":"1900-1949","from":1900,"to":1949,"entries":[{"slug":"thylacine-cough","title":"The Thylacine's Cough","year":1936,"category":"extinct-voices"}]},{"band":"1950-1979","from":1950,"to":1979,"entries":[{"slug":"sami-joik-silences","title":"The Silences Inside a Joik","year":1960,"category":"vanished-rituals"},{"slug":"linotype-hot-metal","title":"The Linotype Floor","year":1978,"category":"obsolete-machines"},{"slug":"amazon-dawn-chorus-1979","title":"Dawn Chorus, Rondônia, 1979","year":1979,"category":"silenced-places"}]},{"band":"1980-1999","from":1980,"to":1999,"entries":[{"slug":"pneumatic-tube-exchange","title":"The Pneumatic Tube Exchange","year":1984,"category":"obsolete-machines"},{"slug":"aral-sea-shorelin
 
-200 /api/search?q=whale
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/timeline returns json
+--- 200 /api/content/kauai-oo-final-duet  [application/json]
+{"ok":true,"data":{"id":"e-001","slug":"kauai-oo-final-duet","title":"The Kauaʻi ʻōʻō's Final Duet","epithet":"A mating call answered by nothing","description":"The last male Kauaʻi ʻōʻō sang a duet that had no second part, because the female half of the species was already gone.","body":[{"kind":"paragraph","text":"The Kauaʻi ʻōʻō sang in pairs. The male opened with two clear ascending notes and the female closed the phrase, a call-and-response so reliable that recordists used it to count breeding pairs across the Alakaʻi plateau without ever seeing a bird."},{"kind":"paragraph","text":"By 1987 the counting was trivial. One male remained. He continued to sing the opening of the duet and then leave the space where the answer belonged, and he did this for an entire season into a forest that had been emptied by avian malaria carried uphill by mosquitoes that warming had allowed to climb."}
 
-200 /api/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/content/kauai-oo-final-duet returns json
+--- 404 /api/content/does-not-exist  [application/json]
+{"ok":false,"error":{"code":"NOT_FOUND","message":"No entry exists at \"does-not-exist\"."}}
 
-200 /api/content/does-not-exist
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/content/does-not-exist returns json
+--- 200 /api/search?q=whale  [application/json]
+{"ok":true,"data":[{"slug":"moa-bone-flute","title":"The Moa Bone Kōauau","epithet":"An instrument whose material went extinct first","category":"lost-instruments","score":2,"matchedOn":"body","highlight":"Some kōauau were made from moa bone. When the moa went, the specific resonance of those instruments became unrepeatable."}],"meta":{"query":"whale","total":1,"limit":10,"suggestions":[]}}
 
-200 /api/search
-<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+PASS /api/search?q=whale returns json
+--- 200 /api/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E  [application/json]
+{"ok":true,"data":[{"slug":"thylacine-cough","title":"The Thylacine's Cough","epithet":"A bark described by everyone and recorded by no one","category":"extinct-voices","score":2,"matchedOn":"body","highlight":"Every account of the thylacine mentions a double coughing bark. No audio was ever captured, so this entry is an honest speculation built from anatomy."}],"meta":{"query":"scriptalert(1)/script","total":1,"limit":10,"suggestions":[]}}
 
-===== method guard =====
+PASS /api/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E returns json
+--- 400 /api/search  [application/json]
+{"ok":false,"error":{"code":"BAD_REQUEST","message":"A search query is required.","fields":{"q":"Provide a search term, for example ?q=glacier."}}}
+
+PASS /api/search returns json
+--- 400 /api/content?limit=99999  [application/json]
+{"ok":false,"error":{"code":"BAD_REQUEST","message":"One or more query parameters were invalid.","fields":{"limit":"limit must be an integer between 1 and 100."}}}
+
+PASS /api/content?limit=99999 returns json
+===== method guards =====
 DELETE /api/health -> 405 allow=null
-PASS DELETE /api/health is rejected
-POST /api/content -> 200 allow=null
-FAIL POST /api/content is rejected got 200
+PASS DELETE /api/health rejected
+POST /api/content -> 405 allow=null
+PASS POST /api/content rejected
+PUT /api/search -> 405 allow=null
+PASS PUT /api/search rejected
+GET /api/contact -> 405 allow=POST
+PASS GET /api/contact rejected
 
-===== contact POST =====
-invalid payload -> 401
-{"protection":{"vercel_auth_callback":"https:\/\/vercel.com\/sso-api?url=https%3A%2F%2Fthrenody-b3h4s2bwm-rexs-projects-941bfa7c.vercel.app%2Fapi%2Fcontact&nonce=80b6e4d9bb4ea836527bb9b0ae294d434192d4b4dc30b2f0148d7b27cb40161f","vercel_auth_enabled":true,"password_enabled":false,"auto_vercel_auth_redirect":true},"error":{"message":"Protected deployment","code":"401"}}
-FAIL invalid contact payload rejected got 401
-valid payload -> 401
-{"protection":{"auto_vercel_auth_redirect":true,"password_enabled":false,"vercel_auth_enabled":true,"vercel_auth_callback":"https:\/\/vercel.com\/sso-api?url=https%3A%2F%2Fthrenody-b3h4s2bwm-rexs-projects-941bfa7c.vercel.app%2Fapi%2Fcontact&nonce=5ab3ff29d1f283c34ff324e5e471b75898ef1b7fdc138d1665e4c2e51877ec2e"},"error":{"code":"401","message":"Protected deployment"}}
-FAIL valid contact payload accepted got 401
+===== contact =====
+invalid -> 422
+{"ok":false,"error":{"code":"VALIDATION_FAILED","message":"Please correct the highlighted fields.","fields":{"name":"Please enter your name.","email":"Please enter a valid email address, for example name@example.org.","subject":"Please choose a subject.","message":"Message must be at least 20 characters. You have 2."}}}
+FAIL invalid contact rejected with 400 got 422
+valid -> 422
+{"ok":false,"error":{"code":"VALIDATION_FAILED","message":"Please correct the highlighted fields.","fields":{"subject":"Please choose a subject."}}}
+FAIL valid contact accepted got 422
+malformed json -> 400
+PASS malformed json rejected with 400
 
-===== 404 handling =====
+===== not found =====
 /entries/no-such-entry -> 200
-FAIL unknown entry returns 404 got 200
+FAIL 404 for /entries/no-such-entry got 200
+/categories/no-such-category -> 200
+FAIL 404 for /categories/no-such-category got 200
+/no-such-page -> 404
+PASS 404 for /no-such-page
 
-===== TOTAL pass=4 fail=32 =====
+===== security headers on / =====
+x-content-type-options: nosniff
+referrer-policy: strict-origin-when-cross-origin
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+content-security-policy: null
+permissions-policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+
+===== TOTAL pass=58 fail=4 =====
