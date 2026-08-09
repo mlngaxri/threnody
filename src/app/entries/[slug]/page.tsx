@@ -24,6 +24,13 @@ interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
+/**
+ * The archive is a fixed set. Any slug outside generateStaticParams is a real
+ * 404 rather than an on-demand render, which also guarantees that a draft slug
+ * can never be served by guessing its URL.
+ */
+export const dynamicParams = false;
+
 /** Pre-render every published entry. Drafts are deliberately excluded. */
 export function generateStaticParams() {
   return publishedEntries.map((entry) => ({ slug: entry.slug }));

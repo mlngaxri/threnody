@@ -1,0 +1,157 @@
+name: Verify deployment
+
+# Each non-empty line of .verify-trigger is a candidate base URL. The first one
+# that answers 200 on / is probed. Report is committed as VERIFY.txt.
+
+on:
+  push:
+    paths:
+      - ".verify-trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Write the probe
+        run: |
+          cat > /tmp/verify.mjs <<'SCRIPT'
+          import fs from "node:fs";
+
+          const candidates = fs.readFileSync(".verify-trigger", "utf8")
+            .split("\n").map((l) => l.trim().replace(/\/$/, "")).filter(Boolean);
+
+          const lines = [];
+          const log = (s = "") => lines.push(String(s));
+          let pass = 0;
+          let fail = 0;
+          const check = (name, ok, detail = "") => {
+            if (ok) { pass += 1; log(`PASS ${name}`); }
+            else { fail += 1; log(`FAIL ${name} ${detail}`); }
+          };
+
+          log("===== reachability =====");
+          let base = null;
+          for (const c of candidates) {
+            try {
+              const r = await fetch(c + "/", { redirect: "manual" });
+              log(`${r.status} ${c}`);
+              if (r.status === 200 && base === null) base = c;
+            } catch (e) { log(`ERR ${c} ${e.message}`); }
+          }
+          if (!base) {
+            log("NO REACHABLE BASE URL");
+            fs.writeFileSync("VERIFY.txt", lines.join("\n") + "\n");
+            process.exit(0);
+          }
+          log(`\nUSING ${base}`);
+
+          log();
+          log("===== 404 behaviour =====");
+          for (const route of [
+            "/entries/no-such-entry",
+            "/categories/no-such-category",
+            "/no-such-page",
+            "/entries/no-such-entry/opengraph-image",
+          ]) {
+            const r = await fetch(base + route);
+            log(`${route} -> ${r.status}`);
+            check(`404 ${route}`, r.status === 404, `got ${r.status}`);
+          }
+
+          log();
+          log("===== still 200 =====");
+          for (const route of [
+            "/", "/atlas", "/timeline", "/categories/extinct-voices",
+            "/entries/kauai-oo-final-duet",
+          ]) {
+            const r = await fetch(base + route);
+            check(`200 ${route}`, r.status === 200, `got ${r.status}`);
+          }
+
+          log();
+          log("===== page weight =====");
+          const weights = [];
+          for (const route of ["/", "/atlas", "/timeline", "/categories", "/contributors", "/method", "/api-docs", "/search", "/contact", "/categories/obsolete-machines", "/entries/kauai-oo-final-duet"]) {
+            const r = await fetch(base + route);
+            const html = await r.text();
+            const kb = Math.round(html.length / 1024);
+            const enc = r.headers.get("content-encoding");
+            weights.push([route, kb]);
+            log(`${String(kb).padStart(6)} kB uncompressed  enc=${enc}  ${route}`);
+          }
+          const worst = weights.slice().sort((a, b) => b[1] - a[1])[0];
+          log(`heaviest: ${worst[0]} at ${worst[1]} kB`);
+          check("every page under 400 kB of html", worst[1] < 400, `${worst[0]} is ${worst[1]} kB`);
+
+          log();
+          log("===== security headers =====");
+          const h = (await fetch(base + "/")).headers;
+          for (const k of ["content-security-policy", "x-content-type-options", "referrer-policy", "x-frame-options", "strict-transport-security", "permissions-policy"]) {
+            log(`${k}: ${h.get(k)}`);
+            check(`header ${k}`, Boolean(h.get(k)));
+          }
+
+          log();
+          log("===== contact endpoint =====");
+          const post = async (label, payload) => {
+            const r = await fetch(base + "/api/contact", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const t = await r.text();
+            log(`${label} -> ${r.status}`);
+            log(t.slice(0, 400));
+            return { status: r.status, text: t };
+          };
+
+          const good = await post("complete valid payload", {
+            name: "Verification Runner",
+            email: "runner@example.com",
+            subject: "correction",
+            message: "Automated deployment verification probe. Please ignore this submission entirely.",
+          });
+          check("valid contact accepted", good.status === 200 || good.status === 201, `got ${good.status}`);
+          check("contact returns a reference", /reference|ref/i.test(good.text));
+
+          const bad = await post("invalid payload", { name: "", email: "nope", subject: "correction", message: "hi" });
+          check("invalid contact returns 422", bad.status === 422, `got ${bad.status}`);
+
+          const inject = await post("html in fields", {
+            name: "<img src=x onerror=alert(1)>",
+            email: "runner@example.com",
+            subject: "correction",
+            message: "<script>alert(1)</script> This message is a probe for reflected markup handling.",
+          });
+          check("no raw script tag echoed back", !inject.text.includes("<script>"));
+
+          log();
+          log("===== robots =====");
+          const robots = await (await fetch(base + "/robots.txt")).text();
+          log(robots);
+
+          log();
+          log(`===== TOTAL pass=${pass} fail=${fail} =====`);
+          fs.writeFileSync("VERIFY.txt", lines.join("\n") + "\n");
+          console.log(lines.join("\n"));
+          SCRIPT
+
+      - name: Run
+        run: node /tmp/verify.mjs
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERIFY.txt
+          git commit -m "CI: deployment verification report" || echo "no change"
+          git push

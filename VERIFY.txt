@@ -1,0 +1,74 @@
+===== reachability =====
+404 https://threnody-git-main-rexs-projects-941bfa7c.vercel.app
+404 https://threnody-rexs-projects-941bfa7c.vercel.app
+404 https://threnody-theta.vercel.app
+200 https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
+
+USING https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
+
+===== 404 behaviour =====
+/entries/no-such-entry -> 200
+FAIL 404 /entries/no-such-entry got 200
+/categories/no-such-category -> 200
+FAIL 404 /categories/no-such-category got 200
+/no-such-page -> 404
+PASS 404 /no-such-page
+/entries/no-such-entry/opengraph-image -> 200
+FAIL 404 /entries/no-such-entry/opengraph-image got 200
+
+===== still 200 =====
+PASS 200 /
+PASS 200 /atlas
+PASS 200 /timeline
+PASS 200 /categories/extinct-voices
+PASS 200 /entries/kauai-oo-final-duet
+
+===== page weight =====
+   882 kB uncompressed  enc=br  /
+  1769 kB uncompressed  enc=br  /atlas
+   445 kB uncompressed  enc=br  /timeline
+    51 kB uncompressed  enc=br  /categories
+   116 kB uncompressed  enc=br  /contributors
+    54 kB uncompressed  enc=br  /method
+    80 kB uncompressed  enc=br  /api-docs
+    45 kB uncompressed  enc=br  /search
+    45 kB uncompressed  enc=br  /contact
+   471 kB uncompressed  enc=br  /categories/obsolete-machines
+   110 kB uncompressed  enc=br  /entries/kauai-oo-final-duet
+heaviest: /atlas at 1769 kB
+FAIL every page under 400 kB of html /atlas is 1769 kB
+
+===== security headers =====
+content-security-policy: null
+FAIL header content-security-policy 
+x-content-type-options: nosniff
+PASS header x-content-type-options
+referrer-policy: strict-origin-when-cross-origin
+PASS header referrer-policy
+x-frame-options: SAMEORIGIN
+PASS header x-frame-options
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+PASS header strict-transport-security
+permissions-policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+PASS header permissions-policy
+
+===== contact endpoint =====
+complete valid payload -> 201
+{"ok":true,"data":{"reference":"THR-2026-1Q8SFC0","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+PASS valid contact accepted
+PASS contact returns a reference
+invalid payload -> 422
+{"ok":false,"error":{"code":"VALIDATION_FAILED","message":"Please correct the highlighted fields.","fields":{"name":"Please enter your name.","email":"Please enter a valid email address, for example name@example.org.","message":"Message must be at least 20 characters. You have 2."}}}
+PASS invalid contact returns 422
+html in fields -> 201
+{"ok":true,"data":{"reference":"THR-2026-06P1JDP","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+PASS no raw script tag echoed back
+
+===== robots =====
+User-Agent: *
+Disallow: /
+
+Sitemap: https://threnody-theta.vercel.app/sitemap.xml
+
+
+===== TOTAL pass=15 fail=5 =====
