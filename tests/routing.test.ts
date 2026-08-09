@@ -5,6 +5,13 @@ import { entries } from "../src/content/entries.ts";
 import { publishedEntries } from "../src/lib/repository.ts";
 import { isUnknownArchivePath, NOT_IN_ARCHIVE_PATH } from "../src/lib/routing.ts";
 
+/** The first published slug, asserted rather than assumed to exist. */
+function knownSlug(): string {
+  const first = publishedEntries[0];
+  assert.ok(first, "the archive should contain at least one published entry");
+  return first.slug;
+}
+
 test("every published entry slug is treated as known", () => {
   for (const entry of publishedEntries) {
     assert.equal(
@@ -36,19 +43,19 @@ test("unknown slugs are rejected", () => {
 });
 
 test("nested segments resolve against the same slug", () => {
-  const known = publishedEntries[0].slug;
+  const known = knownSlug();
   assert.equal(isUnknownArchivePath(`/entries/${known}/opengraph-image`), false);
   assert.equal(isUnknownArchivePath("/entries/no-such-entry/opengraph-image"), true);
 });
 
 test("a trailing slash does not change the verdict", () => {
-  const known = publishedEntries[0].slug;
+  const known = knownSlug();
   assert.equal(isUnknownArchivePath(`/entries/${known}/`), false);
   assert.equal(isUnknownArchivePath("/entries/no-such-entry/"), true);
 });
 
 test("percent-encoded known slugs still resolve", () => {
-  const known = publishedEntries[0].slug;
+  const known = knownSlug();
   assert.equal(isUnknownArchivePath(`/entries/${encodeURIComponent(known)}`), false);
 });
 

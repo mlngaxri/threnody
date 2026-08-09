@@ -27,7 +27,7 @@ export function isUnknownArchivePath(pathname: string): boolean {
   const match = /^\/(entries|categories)\/([^/]+)(?:\/[^/]+)?\/?$/.exec(pathname);
   if (!match) return false;
 
-  const [, collection, rawSlug] = match;
+  const [, collection = "", rawSlug = ""] = match;
 
   let slug: string;
   try {
