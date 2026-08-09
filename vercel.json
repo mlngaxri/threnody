@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/feed.xml",
+      "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=3600, stale-while-revalidate=86400" }]
+    },
+    {
+      "source": "/api/health",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    }
+  ],
+  "redirects": [
+    { "source": "/entries", "destination": "/atlas", "permanent": true },
+    { "source": "/rss", "destination": "/feed.xml", "permanent": true },
+    { "source": "/api", "destination": "/api-docs", "permanent": false }
+  ]
+}
