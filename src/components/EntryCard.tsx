@@ -22,6 +22,10 @@ export function EntryCard({ entry, reason, compact = false }: Props) {
           seed={entry.slug}
           variant="spectrogram"
           height={84}
+          // A card figure is 84px tall, so a finer grid would render detail
+          // nobody can see while costing markup on every card in a 12 up list.
+          cols={28}
+          rows={9}
           label={`Spectrogram of the reconstruction of ${entry.title}. ${entry.sound.description}`}
         />
       ) : null}
