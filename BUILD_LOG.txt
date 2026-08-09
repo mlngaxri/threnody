@@ -1,0 +1,44 @@
+===== tsc --noEmit =====
+src/app/contributors/page.tsx(53,59): error TS2551: Property 'contributor' does not exist on type 'Entry'. Did you mean 'contributorIds'?
+src/app/entries/[slug]/opengraph-image.tsx(40,52): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+tests/api.test.ts(325,17): error TS2352: Conversion of type 'ApiResponse<unknown>' to type '{ meta: { query: string; }; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ ok: true; data: unknown; meta?: Record<string, unknown> | undefined; }' is not comparable to type '{ meta: { query: string; }; }'.
+    Types of property 'meta' are incompatible.
+      Type 'Record<string, unknown> | undefined' is not comparable to type '{ query: string; }'.
+        Property 'query' is missing in type 'Record<string, unknown>' but required in type '{ query: string; }'.
+[tsc exited 2]
+
+===== next build =====
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.5.4
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 6.6s
+   Linting and checking validity of types ...
+
+./src/app/categories/[slug]/page.tsx
+11:3  Warning: 'getTags' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/api-core.ts
+385:5  Warning: Unused eslint-disable directive (no problems were reported from 'no-control-regex').
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+Failed to compile.
+
+./src/app/contributors/page.tsx:53:59
+Type error: Property 'contributor' does not exist on type 'Entry'. Did you mean 'contributorIds'?
+
+[0m [90m 51 |[39m       [33m<[39m[33mdiv[39m style[33m=[39m{{ marginBlockStart[33m:[39m [32m"var(--sp-8)"[39m[33m,[39m display[33m:[39m [32m"grid"[39m[33m,[39m gap[33m:[39m [32m"var(--sp-8)"[39m }}[33m>[39m
+ [90m 52 |[39m         {contributors[33m.[39mmap((contributor) [33m=>[39m {
+[31m[1m>[22m[39m[90m 53 |[39m           [36mconst[39m theirs [33m=[39m publishedEntries[33m.[39mfilter((e) [33m=>[39m e[33m.[39mcontributor [33m===[39m contributor[33m.[39mid)[33m;[39m
+ [90m    |[39m                                                           [31m[1m^[22m[39m
+ [90m 54 |[39m           [36mreturn[39m (
+ [90m 55 |[39m             [33m<[39m[33msection[39m key[33m=[39m{contributor[33m.[39mid} aria[33m-[39mlabelledby[33m=[39m{[32m`c-${contributor.id}`[39m}[33m>[39m
+ [90m 56 |[39m               [33m<[39m[33mdiv[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+[next build exited 1]
