@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getEntry, publishedEntries } from "@/lib/repository";
 import { FIDELITY_LABEL } from "@/components/FidelityBadge";
-import { sampleAt } from "@/lib/signature";
+import { sampleAt, seedFrom } from "@/lib/signature";
 
 export const alt = "An entry in THRENODY";
 export const size = { width: 1200, height: 630 };
@@ -36,8 +36,17 @@ export default async function EntryOpengraphImage({
   // the social card matches the page.
   const bars: number[] = [];
   if (entry) {
+    // Seeded from the slug so the card is byte-stable across rebuilds.
+    let state = seedFrom(`${entry.slug}-og`);
+    const rnd = () => {
+      state = (state + 0x6d2b79f5) >>> 0;
+      let t = state;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
     for (let i = 0; i < 64; i += 1) {
-      const value = Math.abs(sampleAt(entry.sound, `${entry.slug}-og`, i / 64));
+      const value = Math.abs(sampleAt(entry.sound, i / 64, rnd));
       bars.push(Math.max(0.06, Math.min(1, value)));
     }
   }

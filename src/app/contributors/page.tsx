@@ -50,7 +50,9 @@ export default function ContributorsPage() {
 
       <div style={{ marginBlockStart: "var(--sp-8)", display: "grid", gap: "var(--sp-8)" }}>
         {contributors.map((contributor) => {
-          const theirs = publishedEntries.filter((e) => e.contributor === contributor.id);
+          const theirs = publishedEntries.filter((e) =>
+            e.contributorIds.includes(contributor.id),
+          );
           return (
             <section key={contributor.id} aria-labelledby={`c-${contributor.id}`}>
               <div

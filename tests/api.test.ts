@@ -322,7 +322,7 @@ test("GET /api/search caps and validates limits", () => {
 test("search does not reflect unescaped markup", () => {
   const res = handleSearch(params({ q: '<img src=x onerror="alert(1)">' }));
   assert.equal(res.status, 200);
-  const meta = (res.body as { meta: { query: string } }).meta;
+  const meta = (res.body as unknown as { meta: { query: string } }).meta;
   // The echoed query must contain no character capable of breaking out of an
   // HTML text node or an attribute value.
   for (const dangerous of ["<", ">", '"', "'", "`", "&"]) {

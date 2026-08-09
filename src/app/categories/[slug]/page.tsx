@@ -8,7 +8,6 @@ import {
   getCategories,
   getCategory,
   getSuggestions,
-  getTags,
   isValidFidelity,
   isValidSort,
   queryEntries,
