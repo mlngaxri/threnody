@@ -1,9 +1,9 @@
 ===== reachability =====
-200 https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
 200 https://threnody-theta.vercel.app
 200 https://threnody-git-main-rexs-projects-941bfa7c.vercel.app
+200 https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
 
-USING https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
+USING https://threnody-theta.vercel.app
 
 ===== 404 behaviour =====
 /entries/no-such-entry -> 200
@@ -23,7 +23,7 @@ PASS 200 /categories/extinct-voices
 PASS 200 /entries/kauai-oo-final-duet
 
 ===== page weight =====
-   182 kB uncompressed  enc=br  /
+   181 kB uncompressed  enc=br  /
    261 kB uncompressed  enc=br  /atlas
    272 kB uncompressed  enc=br  /timeline
     44 kB uncompressed  enc=br  /categories
@@ -53,20 +53,22 @@ PASS header permissions-policy
 
 ===== contact endpoint =====
 complete valid payload -> 201
-{"ok":true,"data":{"reference":"THR-2026-178CE2M","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-1H7WTRQ","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS valid contact accepted
 PASS contact returns a reference
 invalid payload -> 422
 {"ok":false,"error":{"code":"VALIDATION_FAILED","message":"Please correct the highlighted fields.","fields":{"name":"Please enter your name.","email":"Please enter a valid email address, for example name@example.org.","message":"Message must be at least 20 characters. You have 2."}}}
 PASS invalid contact returns 422
 html in fields -> 201
-{"ok":true,"data":{"reference":"THR-2026-1T9V0ZP","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-1AML953","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS no raw script tag echoed back
 
 ===== robots =====
 User-Agent: *
-Disallow: /
+Allow: /
+Disallow: /api/
 
+Host: https://threnody-theta.vercel.app
 Sitemap: https://threnody-theta.vercel.app/sitemap.xml
 
 
