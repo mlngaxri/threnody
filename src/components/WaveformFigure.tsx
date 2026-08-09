@@ -1,5 +1,5 @@
 import type { SoundSignature } from "@/lib/types";
-import { describeSignature, spectrogram, waveformPath } from "@/lib/signature";
+import { describeSignature, spectrogramBands, waveformPath } from "@/lib/signature";
 
 /**
  * The archive contains no image files. Every visual here is derived from the
@@ -19,6 +19,9 @@ interface Props {
   height?: number;
   /** Accessible description. Defaults to the signature's own description. */
   label?: string;
+  /** Spectrogram grid resolution. Cards use a coarser grid than entry pages. */
+  cols?: number;
+  rows?: number;
 }
 
 export function WaveformFigure({
@@ -27,12 +30,14 @@ export function WaveformFigure({
   variant = "waveform",
   height = 200,
   label,
+  cols = 48,
+  rows = 14,
 }: Props) {
   const description = label ?? describeSignature(signature);
   const titleId = `fig-${seed}-${variant}-title`;
 
   if (variant === "spectrogram") {
-    const cells = spectrogram(signature, seed);
+    const bands = spectrogramBands(signature, seed, cols, rows);
     return (
       <svg
         viewBox="0 0 100 100"
@@ -47,15 +52,12 @@ export function WaveformFigure({
         }}
       >
         <title id={titleId}>{description}</title>
-        {cells.map((cell, i) => (
-          <rect
-            key={i}
-            x={cell.x}
-            y={cell.y}
-            width={cell.w}
-            height={cell.h}
+        {bands.map((band) => (
+          <path
+            key={band.opacity}
+            d={band.d}
             fill="var(--grade, var(--signal))"
-            opacity={cell.v}
+            opacity={band.opacity}
           />
         ))}
       </svg>
@@ -63,6 +65,7 @@ export function WaveformFigure({
   }
 
   const path = waveformPath(signature, seed, 1000, height);
+  const pathId = `fig-${seed}-wave`;
 
   return (
     <svg
@@ -78,6 +81,11 @@ export function WaveformFigure({
       }}
     >
       <title id={titleId}>{description}</title>
+      {/* The path data is long, so it is defined once and referenced twice
+          rather than serialised twice into the document. */}
+      <defs>
+        <path id={pathId} d={path} />
+      </defs>
       <line
         x1="0"
         y1={height / 2}
@@ -86,9 +94,9 @@ export function WaveformFigure({
         stroke="var(--line-strong)"
         strokeWidth="1"
       />
-      <path d={path} fill="var(--grade, var(--signal))" fillOpacity="0.55" />
-      <path
-        d={path}
+      <use href={`#${pathId}`} fill="var(--grade, var(--signal))" fillOpacity="0.55" />
+      <use
+        href={`#${pathId}`}
         fill="none"
         stroke="var(--grade, var(--signal))"
         strokeWidth="1.5"
