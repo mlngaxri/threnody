@@ -1,0 +1,72 @@
+name: Unpack source archive
+
+# The GitHub web uploader silently drops nested directories on a folder
+# drag-and-drop, which is why src/ never arrived. A single .zip file uploads
+# fine, so we accept the archive and let CI expand it into real files.
+#
+# Drop threnody.zip at the repository root and push. This workflow unpacks it,
+# deletes the archive, and commits the resulting tree. It then deletes itself
+# so it never runs a second time.
+
+on:
+  push:
+    paths:
+      - "threnody.zip"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Confirm the archive is present
+        run: |
+          if [ ! -f threnody.zip ]; then
+            echo "No threnody.zip at the repository root. Nothing to do."
+            exit 0
+          fi
+          unzip -l threnody.zip | tail -5
+
+      - name: Expand the archive
+        run: |
+          set -euo pipefail
+          rm -rf .unpack
+          mkdir -p .unpack
+          unzip -q -o threnody.zip -d .unpack
+
+          # If the archive wraps everything in a single top level directory,
+          # step into it so files land at the repository root rather than one
+          # level down, which would break the Next.js root directory.
+          entries=$(find .unpack -mindepth 1 -maxdepth 1 | wc -l)
+          root=.unpack
+          if [ "$entries" -eq 1 ] && [ -d "$(find .unpack -mindepth 1 -maxdepth 1)" ]; then
+            root=$(find .unpack -mindepth 1 -maxdepth 1)
+          fi
+          echo "Unpack root: $root"
+
+          # Copy everything across, including dotfiles.
+          cp -R "$root/." .
+          rm -rf .unpack threnody.zip
+
+          echo "Tree after unpack:"
+          find src -type f 2>/dev/null | sort | head -80 || echo "src/ not found"
+
+      - name: Remove this workflow so it cannot run again
+        run: rm -f .github/workflows/unpack.yml
+
+      - name: Commit the expanded tree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git commit -m "Expand full source tree from uploaded archive"
+          git push
