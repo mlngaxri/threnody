@@ -1,0 +1,52 @@
+name: Probe 404
+
+on:
+  push:
+    paths:
+      - ".probe-trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Probe
+        run: |
+          node -e '
+            const BASE = "https://threnody-theta.vercel.app";
+            const paths = ["/entries/no-such-entry", "/categories/no-such-category", "/no-such-page", "/entries/kauai-oo-final-duet"];
+            const out = [];
+            (async () => {
+              for (const p of paths) {
+                const res = await fetch(BASE + p, { redirect: "manual" });
+                const body = await res.text();
+                out.push("=== " + p + " -> " + res.status);
+                for (const k of ["x-matched-path", "x-vercel-cache", "x-nextjs-prerender", "cache-control", "content-type"]) {
+                  out.push("  " + k + ": " + res.headers.get(k));
+                }
+                const title = body.match(/<title[^>]*>([^<]*)<\/title>/);
+                out.push("  title: " + (title ? title[1] : "none"));
+                out.push("  bytes: " + body.length);
+                out.push("  has NOT IN THE ARCHIVE: " + /not in the archive|not found|404/i.test(body));
+                out.push("");
+              }
+              require("fs").writeFileSync("PROBE.txt", out.join("\n"));
+              console.log(out.join("\n"));
+            })();
+          '
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "CI: 404 probe"
+          git push
