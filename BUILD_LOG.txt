@@ -1,4 +1,10 @@
 ===== tsc --noEmit =====
+src/lib/routing.ts(34,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tests/routing.test.ts(39,17): error TS2532: Object is possibly 'undefined'.
+tests/routing.test.ts(45,17): error TS2532: Object is possibly 'undefined'.
+tests/routing.test.ts(51,17): error TS2532: Object is possibly 'undefined'.
+[tsc exited 2]
 
 ===== next build =====
 ⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
@@ -10,64 +16,20 @@ https://nextjs.org/telemetry
    ▲ Next.js 15.5.9
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 5.2s
+ ✓ Compiled successfully in 5.3s
    Linting and checking validity of types ...
-   Collecting page data ...
-   Generating static pages (0/52) ...
-   Generating static pages (13/52) 
-   Generating static pages (26/52) 
-   Generating static pages (39/52) 
- ✓ Generating static pages (52/52)
-   Finalizing page optimization ...
-   Collecting build traces ...
+Failed to compile.
 
-Route (app)                                                Size  First Load JS  Revalidate  Expire
-┌ ○ /                                                     172 B         106 kB
-├ ○ /_not-found                                           163 B         102 kB
-├ ○ /api-docs                                             180 B         106 kB
-├ ƒ /api/categories                                       163 B         102 kB
-├ ƒ /api/contact                                          163 B         102 kB
-├ ƒ /api/content                                          163 B         102 kB
-├ ƒ /api/content/[slug]                                   163 B         102 kB
-├ ƒ /api/health                                           163 B         102 kB
-├ ƒ /api/search                                           163 B         102 kB
-├ ƒ /api/site-config                                      163 B         102 kB
-├ ƒ /api/timeline                                         163 B         102 kB
-├ ƒ /atlas                                                172 B         106 kB
-├ ○ /categories                                           180 B         106 kB
-├ ● /categories/[slug]                                    172 B         106 kB
-├   ├ /categories/extinct-voices
-├   ├ /categories/silenced-places
-├   ├ /categories/obsolete-machines
-├   └ [+3 more paths]
-├ ƒ /contact                                            2.45 kB         108 kB
-├ ○ /contributors                                         172 B         106 kB
-├ ● /entries/[slug]                                     2.38 kB         108 kB
-├   ├ /entries/kauai-oo-final-duet
-├   ├ /entries/aral-sea-shoreline-1975
-├   ├ /entries/dial-up-handshake
-├   └ [+9 more paths]
-├ ● /entries/[slug]/opengraph-image                       163 B         102 kB
-├   ├ /entries/kauai-oo-final-duet/opengraph-image
-├   ├ /entries/aral-sea-shoreline-1975/opengraph-image
-├   ├ /entries/dial-up-handshake/opengraph-image
-├   └ [+9 more paths]
-├ ○ /feed.xml                                             163 B         102 kB          1h      1y
-├ ○ /icon                                                 163 B         102 kB
-├ ○ /manifest.webmanifest                                 163 B         102 kB
-├ ○ /method                                               180 B         106 kB
-├ ○ /opengraph-image                                      163 B         102 kB
-├ ƒ /robots.txt                                           163 B         102 kB
-├ ƒ /search                                               172 B         106 kB
-├ ○ /sitemap.xml                                          163 B         102 kB
-└ ○ /timeline                                             180 B         106 kB
-+ First Load JS shared by all                            102 kB
-  ├ chunks/255-cb395327542b56ef.js                      45.9 kB
-  ├ chunks/4bd1b696-c023c6e3521b1417.js                 54.2 kB
-  └ other shared chunks (total)                         1.92 kB
+./src/lib/routing.ts:34:31
+Type error: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
 
-
-○  (Static)   prerendered as static content
-●  (SSG)      prerendered as static HTML (uses generateStaticParams)
-ƒ  (Dynamic)  server-rendered on demand
-
+[0m [90m 32 |[39m   [36mlet[39m slug[33m:[39m string[33m;[39m
+ [90m 33 |[39m   [36mtry[39m {
+[31m[1m>[22m[39m[90m 34 |[39m     slug [33m=[39m decodeURIComponent(rawSlug)[33m;[39m
+ [90m    |[39m                               [31m[1m^[22m[39m
+ [90m 35 |[39m   } [36mcatch[39m {
+ [90m 36 |[39m     [90m// A malformed percent-escape cannot name anything real.[39m
+ [90m 37 |[39m     [36mreturn[39m [36mtrue[39m[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+[next build exited 1]
