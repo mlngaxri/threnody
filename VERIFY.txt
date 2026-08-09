@@ -1,8 +1,7 @@
 ===== reachability =====
-404 https://threnody-git-main-rexs-projects-941bfa7c.vercel.app
-404 https://threnody-rexs-projects-941bfa7c.vercel.app
-404 https://threnody-theta.vercel.app
 200 https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
+200 https://threnody-theta.vercel.app
+200 https://threnody-git-main-rexs-projects-941bfa7c.vercel.app
 
 USING https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
 
@@ -24,23 +23,23 @@ PASS 200 /categories/extinct-voices
 PASS 200 /entries/kauai-oo-final-duet
 
 ===== page weight =====
-   882 kB uncompressed  enc=br  /
-  1769 kB uncompressed  enc=br  /atlas
-   445 kB uncompressed  enc=br  /timeline
-    51 kB uncompressed  enc=br  /categories
-   116 kB uncompressed  enc=br  /contributors
-    54 kB uncompressed  enc=br  /method
-    80 kB uncompressed  enc=br  /api-docs
-    45 kB uncompressed  enc=br  /search
-    45 kB uncompressed  enc=br  /contact
-   471 kB uncompressed  enc=br  /categories/obsolete-machines
-   110 kB uncompressed  enc=br  /entries/kauai-oo-final-duet
-heaviest: /atlas at 1769 kB
-FAIL every page under 400 kB of html /atlas is 1769 kB
+   182 kB uncompressed  enc=br  /
+   261 kB uncompressed  enc=br  /atlas
+   272 kB uncompressed  enc=br  /timeline
+    44 kB uncompressed  enc=br  /categories
+   109 kB uncompressed  enc=br  /contributors
+    47 kB uncompressed  enc=br  /method
+    73 kB uncompressed  enc=br  /api-docs
+    38 kB uncompressed  enc=br  /search
+    38 kB uncompressed  enc=br  /contact
+   102 kB uncompressed  enc=br  /categories/obsolete-machines
+    89 kB uncompressed  enc=br  /entries/kauai-oo-final-duet
+heaviest: /timeline at 272 kB
+PASS every page under 400 kB of html
 
 ===== security headers =====
-content-security-policy: null
-FAIL header content-security-policy 
+content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests
+PASS header content-security-policy
 x-content-type-options: nosniff
 PASS header x-content-type-options
 referrer-policy: strict-origin-when-cross-origin
@@ -54,14 +53,14 @@ PASS header permissions-policy
 
 ===== contact endpoint =====
 complete valid payload -> 201
-{"ok":true,"data":{"reference":"THR-2026-1Q8SFC0","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-178CE2M","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS valid contact accepted
 PASS contact returns a reference
 invalid payload -> 422
 {"ok":false,"error":{"code":"VALIDATION_FAILED","message":"Please correct the highlighted fields.","fields":{"name":"Please enter your name.","email":"Please enter a valid email address, for example name@example.org.","message":"Message must be at least 20 characters. You have 2."}}}
 PASS invalid contact returns 422
 html in fields -> 201
-{"ok":true,"data":{"reference":"THR-2026-06P1JDP","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-1T9V0ZP","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS no raw script tag echoed back
 
 ===== robots =====
@@ -71,4 +70,4 @@ Disallow: /
 Sitemap: https://threnody-theta.vercel.app/sitemap.xml
 
 
-===== TOTAL pass=15 fail=5 =====
+===== TOTAL pass=17 fail=3 =====
