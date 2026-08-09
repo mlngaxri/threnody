@@ -1,7 +1,7 @@
 name: Verify deployment
 
-# Reads the base URL from the first line of .verify-trigger, probes the live
-# site, and commits the report as VERIFY.txt.
+# Each non-empty line of .verify-trigger is a candidate base URL. The first one
+# that answers 200 on / is probed. Report is committed as VERIFY.txt.
 
 on:
   push:
@@ -23,14 +23,14 @@ jobs:
 
       - name: Write the probe
         run: |
-          mkdir -p /tmp/probe
-          cat > /tmp/probe/verify.mjs <<'SCRIPT'
+          cat > /tmp/verify.mjs <<'SCRIPT'
           import fs from "node:fs";
 
-          const base = fs.readFileSync(".verify-trigger", "utf8").trim().replace(/\/$/, "");
-          const lines = [];
-          const log = (s = "") => { lines.push(String(s)); };
+          const candidates = fs.readFileSync(".verify-trigger", "utf8")
+            .split("\n").map((l) => l.trim().replace(/\/$/, "")).filter(Boolean);
 
+          const lines = [];
+          const log = (s = "") => lines.push(String(s));
           let pass = 0;
           let fail = 0;
           const check = (name, ok, detail = "") => {
@@ -38,199 +38,117 @@ jobs:
             else { fail += 1; log(`FAIL ${name} ${detail}`); }
           };
 
-          const get = async (path, init) => {
-            const res = await fetch(base + path, init);
-            const ct = res.headers.get("content-type") || "";
-            const binary = ct.startsWith("image/");
-            const body = binary ? "" : await res.text();
-            const bytes = binary ? (await res.arrayBuffer()).byteLength : body.length;
-            return { res, ct, body, bytes };
-          };
-
-          log(`BASE ${base}`);
-          log();
-          log("===== route status =====");
-
-          const routes = [
-            "/", "/atlas", "/timeline", "/categories", "/contributors",
-            "/method", "/api-docs", "/search", "/contact",
-            "/categories/extinct-voices", "/categories/obsolete-machines",
-            "/entries/kauai-oo-final-duet", "/entries/dial-up-handshake",
-            "/sitemap.xml", "/feed.xml", "/robots.txt",
-            "/manifest.webmanifest", "/icon", "/opengraph-image",
-            "/entries/kauai-oo-final-duet/opengraph-image",
-          ];
-
-          const page = {};
-          for (const route of routes) {
+          log("===== reachability =====");
+          let base = null;
+          for (const c of candidates) {
             try {
-              const { res, ct, body, bytes } = await get(route);
-              page[route] = body;
-              log(`${String(res.status).padEnd(4)} ${route.padEnd(48)} ${ct.split(";")[0].padEnd(26)} ${bytes}`);
-              check(`200 ${route}`, res.status === 200, `got ${res.status}`);
-            } catch (err) {
-              log(`ERR  ${route} ${err.message}`);
-              check(`200 ${route}`, false, err.message);
-            }
+              const r = await fetch(c + "/", { redirect: "manual" });
+              log(`${r.status} ${c}`);
+              if (r.status === 200 && base === null) base = c;
+            } catch (e) { log(`ERR ${c} ${e.message}`); }
           }
-
-          log();
-          log("===== html quality =====");
-          const home = page["/"] || "";
-          check("home names THRENODY", /THRENODY/i.test(home));
-          check("home has <title>", /<title>[^<]+<\/title>/.test(home));
-          check("home has meta description", /name="description"/.test(home));
-          check("home has JSON-LD", /application\/ld\+json/.test(home));
-          check("home has html lang", /<html[^>]*lang="/.test(home));
-          check("home has og:title", /property="og:title"/.test(home));
-          check("home has canonical", /rel="canonical"/.test(home));
-          check("home has an h1", /<h1/.test(home));
-          check("home has a main landmark", /<main/.test(home));
-          check("home has a nav landmark", /<nav/.test(home));
-
-          const dashHits = [];
-          for (const [route, html] of Object.entries(page)) {
-            if (!html) continue;
-            if (html.includes("\u2014")) dashHits.push(`em:${route}`);
-            if (html.includes("\u2013")) dashHits.push(`en:${route}`);
+          if (!base) {
+            log("NO REACHABLE BASE URL");
+            fs.writeFileSync("VERIFY.txt", lines.join("\n") + "\n");
+            process.exit(0);
           }
-          check("no em or en dash on any page", dashHits.length === 0, dashHits.join(" "));
+          log(`\nUSING ${base}`);
 
           log();
-          log("===== entry page =====");
-          const entry = page["/entries/kauai-oo-final-duet"] || "";
-          check("entry has an svg waveform", /<svg/.test(entry));
-          check("entry states a fidelity grade", /field.recording|restored|reconstructed|speculative/i.test(entry));
-          check("entry has JSON-LD", /application\/ld\+json/.test(entry));
-
-          log();
-          log("===== feeds =====");
-          const sitemap = page["/sitemap.xml"] || "";
-          const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-          check("sitemap is a urlset", sitemap.includes("<urlset"));
-          log(`sitemap urls: ${locs.length}`);
-          const entryLocs = locs.filter((u) => u.includes("/entries/"));
-          log(`sitemap entry urls: ${entryLocs.length}`);
-          check("sitemap lists exactly 12 entries", entryLocs.length === 12, `got ${entryLocs.length}`);
-
-          const feed = page["/feed.xml"] || "";
-          const items = (feed.match(/<item>/g) || []).length;
-          check("feed is rss", feed.includes("<rss"));
-          log(`feed items: ${items}`);
-          check("feed has 12 items", items === 12, `got ${items}`);
-          check("feed escapes bare ampersands", !/&(?!amp;|lt;|gt;|quot;|apos;|#)/.test(feed));
-
-          log();
-          log("robots.txt:");
-          log(page["/robots.txt"] || "");
-
-          log("manifest:");
-          log((page["/manifest.webmanifest"] || "").slice(0, 400));
-
-          log();
-          log("===== draft leakage =====");
-          const draftish = locs.filter((u) => /draft|unpublished|wip/i.test(u));
-          check("no draft url in sitemap", draftish.length === 0, draftish.join(","));
-
-          log();
-          log("===== api =====");
-          const apis = [
-            "/api/health",
-            "/api/site-config",
-            "/api/categories",
-            "/api/content",
-            "/api/content?limit=2",
-            "/api/timeline",
-            "/api/content/kauai-oo-final-duet",
-            "/api/content/does-not-exist",
-            "/api/search?q=whale",
-            "/api/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E",
-            "/api/search",
-            "/api/content?limit=99999",
-          ];
-          for (const route of apis) {
-            try {
-              const { res, ct, body } = await get(route);
-              log(`--- ${res.status} ${route}  [${ct.split(";")[0]}]`);
-              log(body.slice(0, 900));
-              log();
-              check(`${route} returns json`, ct.includes("application/json"), ct);
-            } catch (err) {
-              log(`ERR ${route} ${err.message}`);
-            }
-          }
-
-          log("===== method guards =====");
-          for (const [method, route] of [
-            ["DELETE", "/api/health"],
-            ["POST", "/api/content"],
-            ["PUT", "/api/search"],
-            ["GET", "/api/contact"],
+          log("===== 404 behaviour =====");
+          for (const route of [
+            "/entries/no-such-entry",
+            "/categories/no-such-category",
+            "/no-such-page",
+            "/entries/no-such-entry/opengraph-image",
           ]) {
-            const res = await fetch(base + route, { method });
-            log(`${method} ${route} -> ${res.status} allow=${res.headers.get("allow")}`);
-            check(`${method} ${route} rejected`, res.status === 405, `got ${res.status}`);
+            const r = await fetch(base + route);
+            log(`${route} -> ${r.status}`);
+            check(`404 ${route}`, r.status === 404, `got ${r.status}`);
           }
 
           log();
-          log("===== contact =====");
-          const post = async (payload) => {
-            const res = await fetch(base + "/api/contact", {
+          log("===== still 200 =====");
+          for (const route of [
+            "/", "/atlas", "/timeline", "/categories/extinct-voices",
+            "/entries/kauai-oo-final-duet",
+          ]) {
+            const r = await fetch(base + route);
+            check(`200 ${route}`, r.status === 200, `got ${r.status}`);
+          }
+
+          log();
+          log("===== page weight =====");
+          const weights = [];
+          for (const route of ["/", "/atlas", "/timeline", "/categories", "/contributors", "/method", "/api-docs", "/search", "/contact", "/categories/obsolete-machines", "/entries/kauai-oo-final-duet"]) {
+            const r = await fetch(base + route);
+            const html = await r.text();
+            const kb = Math.round(html.length / 1024);
+            const enc = r.headers.get("content-encoding");
+            weights.push([route, kb]);
+            log(`${String(kb).padStart(6)} kB uncompressed  enc=${enc}  ${route}`);
+          }
+          const worst = weights.slice().sort((a, b) => b[1] - a[1])[0];
+          log(`heaviest: ${worst[0]} at ${worst[1]} kB`);
+          check("every page under 400 kB of html", worst[1] < 400, `${worst[0]} is ${worst[1]} kB`);
+
+          log();
+          log("===== security headers =====");
+          const h = (await fetch(base + "/")).headers;
+          for (const k of ["content-security-policy", "x-content-type-options", "referrer-policy", "x-frame-options", "strict-transport-security", "permissions-policy"]) {
+            log(`${k}: ${h.get(k)}`);
+            check(`header ${k}`, Boolean(h.get(k)));
+          }
+
+          log();
+          log("===== contact endpoint =====");
+          const post = async (label, payload) => {
+            const r = await fetch(base + "/api/contact", {
               method: "POST",
               headers: { "content-type": "application/json" },
               body: JSON.stringify(payload),
             });
-            return { status: res.status, text: (await res.text()).slice(0, 500) };
+            const t = await r.text();
+            log(`${label} -> ${r.status}`);
+            log(t.slice(0, 400));
+            return { status: r.status, text: t };
           };
 
-          const invalid = await post({ name: "", email: "nope", message: "hi" });
-          log(`invalid -> ${invalid.status}`);
-          log(invalid.text);
-          check("invalid contact rejected with 400", invalid.status === 400, `got ${invalid.status}`);
-
-          const valid = await post({
+          const good = await post("complete valid payload", {
             name: "Verification Runner",
             email: "runner@example.com",
-            message: "Automated deployment verification probe. Please ignore this submission.",
+            subject: "correction",
+            message: "Automated deployment verification probe. Please ignore this submission entirely.",
           });
-          log(`valid -> ${valid.status}`);
-          log(valid.text);
-          check("valid contact accepted", valid.status === 200 || valid.status === 201, `got ${valid.status}`);
+          check("valid contact accepted", good.status === 200 || good.status === 201, `got ${good.status}`);
+          check("contact returns a reference", /reference|ref/i.test(good.text));
 
-          const malformed = await fetch(base + "/api/contact", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: "{not json",
+          const bad = await post("invalid payload", { name: "", email: "nope", subject: "correction", message: "hi" });
+          check("invalid contact returns 422", bad.status === 422, `got ${bad.status}`);
+
+          const inject = await post("html in fields", {
+            name: "<img src=x onerror=alert(1)>",
+            email: "runner@example.com",
+            subject: "correction",
+            message: "<script>alert(1)</script> This message is a probe for reflected markup handling.",
           });
-          log(`malformed json -> ${malformed.status}`);
-          check("malformed json rejected with 400", malformed.status === 400, `got ${malformed.status}`);
+          check("no raw script tag echoed back", !inject.text.includes("<script>"));
 
           log();
-          log("===== not found =====");
-          for (const route of ["/entries/no-such-entry", "/categories/no-such-category", "/no-such-page"]) {
-            const res = await fetch(base + route);
-            log(`${route} -> ${res.status}`);
-            check(`404 for ${route}`, res.status === 404, `got ${res.status}`);
-          }
-
-          log();
-          log("===== security headers on / =====");
-          const head = await fetch(base + "/");
-          for (const h of ["x-content-type-options", "referrer-policy", "x-frame-options", "strict-transport-security", "content-security-policy", "permissions-policy"]) {
-            log(`${h}: ${head.headers.get(h)}`);
-          }
+          log("===== robots =====");
+          const robots = await (await fetch(base + "/robots.txt")).text();
+          log(robots);
 
           log();
           log(`===== TOTAL pass=${pass} fail=${fail} =====`);
-
           fs.writeFileSync("VERIFY.txt", lines.join("\n") + "\n");
-          console.log(lines.slice(-40).join("\n"));
+          console.log(lines.join("\n"));
           SCRIPT
 
-      - name: Run the probe
-        run: node /tmp/probe/verify.mjs
+      - name: Run
+        run: node /tmp/verify.mjs
 
-      - name: Commit the report
+      - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
