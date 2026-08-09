@@ -1,0 +1,113 @@
+BASE https://threnody-b3h4s2bwm-rexs-projects-941bfa7c.vercel.app
+
+===== route status =====
+302  /                                              text/plain                 15
+FAIL status 200 / got 302
+302  /atlas                                         text/plain                 15
+FAIL status 200 /atlas got 302
+302  /timeline                                      text/plain                 15
+FAIL status 200 /timeline got 302
+302  /categories                                    text/plain                 15
+FAIL status 200 /categories got 302
+302  /contributors                                  text/plain                 15
+FAIL status 200 /contributors got 302
+302  /method                                        text/plain                 15
+FAIL status 200 /method got 302
+302  /api-docs                                      text/plain                 15
+FAIL status 200 /api-docs got 302
+302  /search                                        text/plain                 15
+FAIL status 200 /search got 302
+302  /contact                                       text/plain                 15
+FAIL status 200 /contact got 302
+302  /categories/extinct-voices                     text/plain                 15
+FAIL status 200 /categories/extinct-voices got 302
+302  /entries/kauai-oo-final-duet                   text/plain                 15
+FAIL status 200 /entries/kauai-oo-final-duet got 302
+302  /entries/dial-up-handshake                     text/plain                 15
+FAIL status 200 /entries/dial-up-handshake got 302
+302  /sitemap.xml                                   text/plain                 15
+FAIL status 200 /sitemap.xml got 302
+302  /feed.xml                                      text/plain                 15
+FAIL status 200 /feed.xml got 302
+302  /robots.txt                                    text/plain                 15
+FAIL status 200 /robots.txt got 302
+302  /manifest.webmanifest                          text/plain                 15
+FAIL status 200 /manifest.webmanifest got 302
+302  /icon                                          text/plain                 15
+FAIL status 200 /icon got 302
+302  /opengraph-image                               text/plain                 15
+FAIL status 200 /opengraph-image got 302
+302  /entries/kauai-oo-final-duet/opengraph-image   text/plain                 15
+FAIL status 200 /entries/kauai-oo-final-duet/opengraph-image got 302
+
+===== content assertions =====
+FAIL home mentions THRENODY 
+FAIL home has a title tag 
+FAIL home has a meta description 
+FAIL home has JSON-LD 
+FAIL home has lang attribute 
+FAIL home has a skip link 
+PASS no em dash anywhere on home
+PASS no en dash anywhere on home
+FAIL sitemap is xml 
+sitemap urls: 0
+FAIL feed is rss 
+FAIL feed has items 
+feed items: 0
+robots.txt:
+Redirecting...
+
+
+===== draft leakage =====
+PASS no obvious draft slug in sitemap
+
+===== api =====
+200 /api/health
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/site-config
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/categories
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/content
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/timeline
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/content/kauai-oo-final-duet
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/search?q=whale
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/content/does-not-exist
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+200 /api/search
+<!DOCTYPE html><html data-dpl-id="dpl_EmyECkvmzVHStStoXnZ6Q9TvCgzh" class="geist_mono_fe992356-module__VEU71W__className geistsans_d5a4f12f-module__xjg95W__className geist_mono_fe992356-module__VEU71W__variable geistsans_d5a4f12f-module__xjg95W__variable dash" lang="en-US"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><link rel="stylesheet" href="/_next/static/immutable/chunks/2m7nnnj5vb7g3.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/immutable/chunks/3zlt10mm4wat5.css" data-precedence="next"/><link
+
+===== method guard =====
+DELETE /api/health -> 405 allow=null
+PASS DELETE /api/health is rejected
+POST /api/content -> 200 allow=null
+FAIL POST /api/content is rejected got 200
+
+===== contact POST =====
+invalid payload -> 401
+{"protection":{"vercel_auth_callback":"https:\/\/vercel.com\/sso-api?url=https%3A%2F%2Fthrenody-b3h4s2bwm-rexs-projects-941bfa7c.vercel.app%2Fapi%2Fcontact&nonce=80b6e4d9bb4ea836527bb9b0ae294d434192d4b4dc30b2f0148d7b27cb40161f","vercel_auth_enabled":true,"password_enabled":false,"auto_vercel_auth_redirect":true},"error":{"message":"Protected deployment","code":"401"}}
+FAIL invalid contact payload rejected got 401
+valid payload -> 401
+{"protection":{"auto_vercel_auth_redirect":true,"password_enabled":false,"vercel_auth_enabled":true,"vercel_auth_callback":"https:\/\/vercel.com\/sso-api?url=https%3A%2F%2Fthrenody-b3h4s2bwm-rexs-projects-941bfa7c.vercel.app%2Fapi%2Fcontact&nonce=5ab3ff29d1f283c34ff324e5e471b75898ef1b7fdc138d1665e4c2e51877ec2e"},"error":{"code":"401","message":"Protected deployment"}}
+FAIL valid contact payload accepted got 401
+
+===== 404 handling =====
+/entries/no-such-entry -> 200
+FAIL unknown entry returns 404 got 200
+
+===== TOTAL pass=4 fail=32 =====
