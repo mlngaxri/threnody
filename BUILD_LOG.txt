@@ -1,12 +1,4 @@
 ===== tsc --noEmit =====
-src/app/contributors/page.tsx(53,59): error TS2551: Property 'contributor' does not exist on type 'Entry'. Did you mean 'contributorIds'?
-src/app/entries/[slug]/opengraph-image.tsx(40,52): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
-tests/api.test.ts(325,17): error TS2352: Conversion of type 'ApiResponse<unknown>' to type '{ meta: { query: string; }; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
-  Type '{ ok: true; data: unknown; meta?: Record<string, unknown> | undefined; }' is not comparable to type '{ meta: { query: string; }; }'.
-    Types of property 'meta' are incompatible.
-      Type 'Record<string, unknown> | undefined' is not comparable to type '{ query: string; }'.
-        Property 'query' is missing in type 'Record<string, unknown>' but required in type '{ query: string; }'.
-[tsc exited 2]
 
 ===== next build =====
 ⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
@@ -18,27 +10,64 @@ https://nextjs.org/telemetry
    ▲ Next.js 15.5.4
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 6.6s
+ ✓ Compiled successfully in 4.9s
    Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/52) ...
+   Generating static pages (13/52) 
+   Generating static pages (26/52) 
+   Generating static pages (39/52) 
+ ✓ Generating static pages (52/52)
+   Finalizing page optimization ...
+   Collecting build traces ...
 
-./src/app/categories/[slug]/page.tsx
-11:3  Warning: 'getTags' is defined but never used.  @typescript-eslint/no-unused-vars
+Route (app)                                                Size  First Load JS  Revalidate  Expire
+┌ ○ /                                                     172 B         105 kB
+├ ○ /_not-found                                           163 B         102 kB
+├ ○ /api-docs                                             180 B         105 kB
+├ ƒ /api/categories                                       163 B         102 kB
+├ ƒ /api/contact                                          163 B         102 kB
+├ ƒ /api/content                                          163 B         102 kB
+├ ƒ /api/content/[slug]                                   163 B         102 kB
+├ ƒ /api/health                                           163 B         102 kB
+├ ƒ /api/search                                           163 B         102 kB
+├ ƒ /api/site-config                                      163 B         102 kB
+├ ƒ /api/timeline                                         163 B         102 kB
+├ ƒ /atlas                                                172 B         105 kB
+├ ○ /categories                                           180 B         105 kB
+├ ● /categories/[slug]                                    172 B         105 kB
+├   ├ /categories/extinct-voices
+├   ├ /categories/silenced-places
+├   ├ /categories/obsolete-machines
+├   └ [+3 more paths]
+├ ƒ /contact                                            2.45 kB         108 kB
+├ ○ /contributors                                         172 B         105 kB
+├ ● /entries/[slug]                                     2.38 kB         108 kB
+├   ├ /entries/kauai-oo-final-duet
+├   ├ /entries/aral-sea-shoreline-1975
+├   ├ /entries/dial-up-handshake
+├   └ [+9 more paths]
+├ ● /entries/[slug]/opengraph-image                       163 B         102 kB
+├   ├ /entries/kauai-oo-final-duet/opengraph-image
+├   ├ /entries/aral-sea-shoreline-1975/opengraph-image
+├   ├ /entries/dial-up-handshake/opengraph-image
+├   └ [+9 more paths]
+├ ○ /feed.xml                                             163 B         102 kB          1h      1y
+├ ○ /icon                                                 163 B         102 kB
+├ ○ /manifest.webmanifest                                 163 B         102 kB
+├ ○ /method                                               180 B         105 kB
+├ ○ /opengraph-image                                      163 B         102 kB
+├ ƒ /robots.txt                                           163 B         102 kB
+├ ƒ /search                                               172 B         105 kB
+├ ○ /sitemap.xml                                          163 B         102 kB
+└ ○ /timeline                                             180 B         105 kB
++ First Load JS shared by all                            102 kB
+  ├ chunks/255-4efeec91c7871d79.js                      45.7 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js                 54.2 kB
+  └ other shared chunks (total)                         1.92 kB
 
-./src/lib/api-core.ts
-385:5  Warning: Unused eslint-disable directive (no problems were reported from 'no-control-regex').
 
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-Failed to compile.
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
 
-./src/app/contributors/page.tsx:53:59
-Type error: Property 'contributor' does not exist on type 'Entry'. Did you mean 'contributorIds'?
-
-[0m [90m 51 |[39m       [33m<[39m[33mdiv[39m style[33m=[39m{{ marginBlockStart[33m:[39m [32m"var(--sp-8)"[39m[33m,[39m display[33m:[39m [32m"grid"[39m[33m,[39m gap[33m:[39m [32m"var(--sp-8)"[39m }}[33m>[39m
- [90m 52 |[39m         {contributors[33m.[39mmap((contributor) [33m=>[39m {
-[31m[1m>[22m[39m[90m 53 |[39m           [36mconst[39m theirs [33m=[39m publishedEntries[33m.[39mfilter((e) [33m=>[39m e[33m.[39mcontributor [33m===[39m contributor[33m.[39mid)[33m;[39m
- [90m    |[39m                                                           [31m[1m^[22m[39m
- [90m 54 |[39m           [36mreturn[39m (
- [90m 55 |[39m             [33m<[39m[33msection[39m key[33m=[39m{contributor[33m.[39mid} aria[33m-[39mlabelledby[33m=[39m{[32m`c-${contributor.id}`[39m}[33m>[39m
- [90m 56 |[39m               [33m<[39m[33mdiv[39m[0m
-Next.js build worker exited with code: 1 and signal: null
-[next build exited 1]
