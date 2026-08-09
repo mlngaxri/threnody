@@ -7,10 +7,10 @@ This information is used to shape Next.js' roadmap and prioritize features.
 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
 https://nextjs.org/telemetry
 
-   ▲ Next.js 15.5.4
+   ▲ Next.js 15.5.9
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 6.8s
+ ✓ Compiled successfully in 5.2s
    Linting and checking validity of types ...
    Collecting page data ...
    Generating static pages (0/52) ...
@@ -22,9 +22,9 @@ https://nextjs.org/telemetry
    Collecting build traces ...
 
 Route (app)                                                Size  First Load JS  Revalidate  Expire
-┌ ○ /                                                     172 B         105 kB
+┌ ○ /                                                     172 B         106 kB
 ├ ○ /_not-found                                           163 B         102 kB
-├ ○ /api-docs                                             180 B         105 kB
+├ ○ /api-docs                                             180 B         106 kB
 ├ ƒ /api/categories                                       163 B         102 kB
 ├ ƒ /api/contact                                          163 B         102 kB
 ├ ƒ /api/content                                          163 B         102 kB
@@ -33,15 +33,15 @@ Route (app)                                                Size  First Load JS  
 ├ ƒ /api/search                                           163 B         102 kB
 ├ ƒ /api/site-config                                      163 B         102 kB
 ├ ƒ /api/timeline                                         163 B         102 kB
-├ ƒ /atlas                                                172 B         105 kB
-├ ○ /categories                                           180 B         105 kB
-├ ● /categories/[slug]                                    172 B         105 kB
+├ ƒ /atlas                                                172 B         106 kB
+├ ○ /categories                                           180 B         106 kB
+├ ● /categories/[slug]                                    172 B         106 kB
 ├   ├ /categories/extinct-voices
 ├   ├ /categories/silenced-places
 ├   ├ /categories/obsolete-machines
 ├   └ [+3 more paths]
 ├ ƒ /contact                                            2.45 kB         108 kB
-├ ○ /contributors                                         172 B         105 kB
+├ ○ /contributors                                         172 B         106 kB
 ├ ● /entries/[slug]                                     2.38 kB         108 kB
 ├   ├ /entries/kauai-oo-final-duet
 ├   ├ /entries/aral-sea-shoreline-1975
@@ -55,14 +55,14 @@ Route (app)                                                Size  First Load JS  
 ├ ○ /feed.xml                                             163 B         102 kB          1h      1y
 ├ ○ /icon                                                 163 B         102 kB
 ├ ○ /manifest.webmanifest                                 163 B         102 kB
-├ ○ /method                                               180 B         105 kB
+├ ○ /method                                               180 B         106 kB
 ├ ○ /opengraph-image                                      163 B         102 kB
 ├ ƒ /robots.txt                                           163 B         102 kB
-├ ƒ /search                                               172 B         105 kB
+├ ƒ /search                                               172 B         106 kB
 ├ ○ /sitemap.xml                                          163 B         102 kB
-└ ○ /timeline                                             180 B         105 kB
+└ ○ /timeline                                             180 B         106 kB
 + First Load JS shared by all                            102 kB
-  ├ chunks/255-4efeec91c7871d79.js                      45.7 kB
+  ├ chunks/255-cb395327542b56ef.js                      45.9 kB
   ├ chunks/4bd1b696-c023c6e3521b1417.js                 54.2 kB
   └ other shared chunks (total)                         1.92 kB
 
