@@ -1,0 +1,176 @@
+name: Verify deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Base URL of the deployment
+        required: true
+  push:
+    paths:
+      - ".verify-trigger"
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe the live deployment
+        env:
+          BASE: ${{ github.event.inputs.base || 'https://threnody-b3h4s2bwm-rexs-projects-941bfa7c.vercel.app' }}
+        run: |
+          cat > /tmp/verify.mjs <<'SCRIPT'
+          const base = process.env.BASE.replace(/\/$/, "");
+          const out = [];
+          const log = (s) => { out.push(s); console.log(s); };
+
+          let pass = 0;
+          let fail = 0;
+          const check = (name, ok, detail = "") => {
+            if (ok) { pass += 1; log(`PASS ${name}`); }
+            else { fail += 1; log(`FAIL ${name} ${detail}`); }
+          };
+
+          const routes = [
+            "/", "/atlas", "/timeline", "/categories", "/contributors",
+            "/method", "/api-docs", "/search", "/contact",
+            "/categories/extinct-voices",
+            "/entries/kauai-oo-final-duet",
+            "/entries/dial-up-handshake",
+            "/sitemap.xml", "/feed.xml", "/robots.txt",
+            "/manifest.webmanifest", "/icon", "/opengraph-image",
+            "/entries/kauai-oo-final-duet/opengraph-image",
+          ];
+
+          log(`BASE ${base}`);
+          log("");
+          log("===== route status =====");
+
+          const bodies = {};
+          for (const route of routes) {
+            try {
+              const res = await fetch(base + route, { redirect: "manual" });
+              const ct = res.headers.get("content-type") || "";
+              const body = ct.startsWith("image/") ? "" : await res.text();
+              bodies[route] = body;
+              const size = ct.startsWith("image/")
+                ? Number(res.headers.get("content-length") || 0)
+                : body.length;
+              log(`${String(res.status).padEnd(4)} ${route.padEnd(46)} ${ct.split(";")[0].padEnd(26)} ${size}`);
+              check(`status 200 ${route}`, res.status === 200, `got ${res.status}`);
+            } catch (err) {
+              log(`ERR  ${route} ${err.message}`);
+              check(`status 200 ${route}`, false, err.message);
+            }
+          }
+
+          log("");
+          log("===== content assertions =====");
+
+          const home = bodies["/"] || "";
+          check("home mentions THRENODY", /THRENODY/i.test(home));
+          check("home has a title tag", /<title>[^<]+<\/title>/.test(home));
+          check("home has a meta description", /name="description"/.test(home));
+          check("home has JSON-LD", /application\/ld\+json/.test(home));
+          check("home has lang attribute", /<html[^>]*lang="/.test(home));
+          check("home has a skip link", /skip/i.test(home));
+          check("no em dash anywhere on home", !home.includes("\u2014"));
+          check("no en dash anywhere on home", !home.includes("\u2013"));
+
+          const sitemap = bodies["/sitemap.xml"] || "";
+          check("sitemap is xml", sitemap.includes("<urlset"));
+          const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+          log(`sitemap urls: ${locs.length}`);
+
+          const feed = bodies["/feed.xml"] || "";
+          check("feed is rss", feed.includes("<rss") || feed.includes("<feed"));
+          check("feed has items", (feed.match(/<item>/g) || []).length > 0);
+          log(`feed items: ${(feed.match(/<item>/g) || []).length}`);
+
+          const robots = bodies["/robots.txt"] || "";
+          log(`robots.txt:\n${robots}`);
+
+          log("");
+          log("===== draft leakage =====");
+          const leaked = locs.filter((u) => /draft/i.test(u));
+          check("no obvious draft slug in sitemap", leaked.length === 0, leaked.join(","));
+
+          log("");
+          log("===== api =====");
+          const apis = [
+            "/api/health", "/api/site-config", "/api/categories",
+            "/api/content", "/api/timeline",
+            "/api/content/kauai-oo-final-duet",
+            "/api/search?q=whale",
+            "/api/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E",
+            "/api/content/does-not-exist",
+            "/api/search",
+          ];
+          for (const route of apis) {
+            try {
+              const res = await fetch(base + route);
+              const text = await res.text();
+              log(`${res.status} ${route}`);
+              log(text.slice(0, 600));
+              log("");
+            } catch (err) {
+              log(`ERR ${route} ${err.message}`);
+            }
+          }
+
+          log("===== method guard =====");
+          for (const [method, route] of [["DELETE", "/api/health"], ["POST", "/api/content"]]) {
+            const res = await fetch(base + route, { method });
+            log(`${method} ${route} -> ${res.status} allow=${res.headers.get("allow")}`);
+            check(`${method} ${route} is rejected`, res.status === 405, `got ${res.status}`);
+          }
+
+          log("");
+          log("===== contact POST =====");
+          const bad = await fetch(base + "/api/contact", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ name: "", email: "nope", message: "hi" }),
+          });
+          log(`invalid payload -> ${bad.status}`);
+          log((await bad.text()).slice(0, 500));
+          check("invalid contact payload rejected", bad.status === 400, `got ${bad.status}`);
+
+          const good = await fetch(base + "/api/contact", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              name: "Verification Runner",
+              email: "runner@example.com",
+              message: "Automated deployment verification probe. Please ignore.",
+            }),
+          });
+          log(`valid payload -> ${good.status}`);
+          log((await good.text()).slice(0, 500));
+          check("valid contact payload accepted", good.status === 200 || good.status === 201, `got ${good.status}`);
+
+          log("");
+          log("===== 404 handling =====");
+          const nf = await fetch(base + "/entries/no-such-entry");
+          log(`/entries/no-such-entry -> ${nf.status}`);
+          check("unknown entry returns 404", nf.status === 404, `got ${nf.status}`);
+
+          log("");
+          log(`===== TOTAL pass=${pass} fail=${fail} =====`);
+          require("node:fs");
+          SCRIPT
+          node --input-type=module -e "$(sed 's/require("node:fs");//' /tmp/verify.mjs)" > /tmp/verify.txt 2>&1 || true
+          cp /tmp/verify.txt VERIFY.txt
+          tail -5 VERIFY.txt
+
+      - name: Commit the report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERIFY.txt
+          git commit -m "CI: deployment verification report" || echo "no change"
+          git push
