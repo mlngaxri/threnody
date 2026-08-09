@@ -1,0 +1,1050 @@
+/* ==========================================================================
+   THRENODY design system.
+
+   Art direction: an archive, not an app. The reference points are paper,
+   magnetic tape, the phosphor trace of an oscilloscope and the grey ladder of
+   a spectrogram. Everything is quiet until you ask it to speak.
+
+   The spine of the system is the FIDELITY GRADE. How much of an entry is
+   evidence and how much is inference is encoded visually, not just stated in
+   words, so a reader can see the epistemic status of a thing before reading it.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Base surface. Warm near-black, like unlit paper rather than pure void. */
+  --ink-000: #07080a;
+  --ink-050: #0c0e11;
+  --ink-100: #131619;
+  --ink-200: #1b1f24;
+  --ink-300: #262b32;
+  --ink-400: #3a414a;
+  --ink-500: #565e69;
+  --ink-600: #7b838f;
+  --ink-700: #a7aeb8;
+  --ink-800: #d2d7dd;
+  --ink-900: #f2f4f6;
+
+  /* Signal colour. Used sparingly; this is a phosphor trace, not decoration. */
+  --signal: #d8e64f;
+  --signal-dim: #8b9430;
+
+  /* Category accents, referenced from content data by name. */
+  --accent-amber: #e0a54a;
+  --accent-cyan: #63c7d4;
+  --accent-orange: #e08050;
+  --accent-violet: #a48fd6;
+  --accent-rose: #dd7f9c;
+  --accent-emerald: #6fc39a;
+
+  /* Semantic aliases resolved per-context. */
+  --bg: var(--ink-000);
+  --bg-raised: var(--ink-050);
+  --bg-inset: var(--ink-100);
+  --line: var(--ink-300);
+  --line-strong: var(--ink-400);
+  --text: var(--ink-900);
+  --text-muted: var(--ink-700);
+  --text-faint: var(--ink-600);
+  --accent: var(--signal);
+
+  /* Type. No webfont is fetched: the archive should render instantly and
+     identically offline. Character comes from the scale and the setting. */
+  --font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino,
+    "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono",
+    "Roboto Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Fluid type scale. Ratio tightens on small screens so long titles survive. */
+  --step--2: clamp(0.69rem, 0.67rem + 0.11vw, 0.75rem);
+  --step--1: clamp(0.83rem, 0.79rem + 0.18vw, 0.94rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --step-1: clamp(1.2rem, 1.11rem + 0.42vw, 1.5rem);
+  --step-2: clamp(1.44rem, 1.29rem + 0.72vw, 2rem);
+  --step-3: clamp(1.73rem, 1.48rem + 1.2vw, 2.66rem);
+  --step-4: clamp(2.07rem, 1.69rem + 1.9vw, 3.55rem);
+  --step-5: clamp(2.49rem, 1.9rem + 2.94vw, 4.74rem);
+  --step-6: clamp(2.99rem, 2.1rem + 4.44vw, 6.31rem);
+
+  /* Spacing, a 4px base with a modular ramp. */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  /* Measure and shell. */
+  --measure: 68ch;
+  --shell: 84rem;
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+
+  /* Motion. Slow, mechanical easings. Nothing bounces in an archive. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur: 320ms;
+  --dur-slow: 700ms;
+
+  --radius: 2px;
+  --focus-ring: 2px solid var(--signal);
+  --focus-offset: 3px;
+
+  color-scheme: dark;
+}
+
+/* Light mode is a genuine second art direction, not an inversion. It reads as
+   archival paper: warm white, printed rules, ink-black type. */
+:root[data-theme="light"] {
+  --bg: #f4f1ea;
+  --bg-raised: #ebe7dd;
+  --bg-inset: #e2ddd1;
+  --line: #c9c2b2;
+  --line-strong: #a79e8a;
+  --text: #16181c;
+  --text-muted: #4a4c52;
+  --text-faint: #6c6e75;
+  --signal: #3c4a06;
+  --signal-dim: #6a7a26;
+  --accent: var(--signal);
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+/* Focus. Always visible, never removed, and offset so it survives on dark. */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--ink-000);
+}
+
+/* --------------------------------------------------------------------------
+   3. Utilities
+   -------------------------------------------------------------------------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  z-index: 200;
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--signal);
+  color: var(--ink-000);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.stack > * + * {
+  margin-block-start: var(--flow, var(--sp-4));
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* --------------------------------------------------------------------------
+   4. Fidelity grades: the visual spine
+
+   Each grade has a distinct border language, surface texture and colour, so
+   the epistemic status of an entry is legible before you read a word of it.
+   The pattern is deliberately redundant with the text label, never a
+   replacement for it, because colour alone is not an accessible signal.
+   -------------------------------------------------------------------------- */
+
+[data-fidelity="field-recording"] {
+  --grade: #7fd6a4;
+  --grade-alpha: rgba(127, 214, 164, 0.14);
+  --grade-border: 1px solid var(--grade);
+  --grade-dash: none;
+  --grade-grain: 0;
+  --grade-label: "Field recording";
+}
+
+[data-fidelity="restored"] {
+  --grade: #86bfe0;
+  --grade-alpha: rgba(134, 191, 224, 0.13);
+  --grade-border: 1px solid var(--grade);
+  --grade-dash: none;
+  --grade-grain: 0.22;
+  --grade-label: "Restored";
+}
+
+[data-fidelity="reconstructed"] {
+  --grade: #e0b062;
+  --grade-alpha: rgba(224, 176, 98, 0.13);
+  --grade-border: 1px dashed var(--grade);
+  --grade-dash: 6 4;
+  --grade-grain: 0.48;
+  --grade-label: "Reconstructed";
+}
+
+[data-fidelity="speculative"] {
+  --grade: #d98a8a;
+  --grade-alpha: rgba(217, 138, 138, 0.12);
+  --grade-border: 1px dotted var(--grade);
+  --grade-dash: 2 5;
+  --grade-grain: 0.78;
+  --grade-label: "Speculative";
+}
+
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.2em 0.6em;
+  border: var(--grade-border);
+  color: var(--grade);
+  background: var(--grade-alpha);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.grade-badge__dot {
+  width: 0.45em;
+  height: 0.45em;
+  background: var(--grade);
+  border-radius: 50%;
+  flex: none;
+}
+
+/* Speculative entries render their dot hollow, so the distinction survives
+   greyscale, colour blindness and forced-colours mode. */
+[data-fidelity="speculative"] .grade-badge__dot,
+[data-fidelity="reconstructed"] .grade-badge__dot {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--grade);
+}
+
+/* --------------------------------------------------------------------------
+   5. Components
+   -------------------------------------------------------------------------- */
+
+/* Site navigation. Fixed rail on large screens, top bar elsewhere. */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  min-height: 4rem;
+}
+
+.nav__brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  letter-spacing: 0.22em;
+  text-decoration: none;
+  flex: none;
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  margin-inline-start: auto;
+  flex-wrap: wrap;
+}
+
+.nav__link {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--text-muted);
+  padding-block: var(--sp-2);
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.nav__link:hover,
+.nav__link:focus-visible {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.nav__link[aria-current="page"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.nav__toggle {
+  display: none;
+  margin-inline-start: auto;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  min-height: 44px;
+  transition: background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn--primary {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--ink-000);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background: transparent;
+  color: var(--signal);
+}
+
+.btn[aria-disabled="true"],
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Cards */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--grade, var(--line-strong));
+  text-decoration: none;
+  transition: border-color var(--dur) var(--ease-out),
+    background var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+  height: 100%;
+}
+
+.card:hover,
+.card:focus-within {
+  background: var(--bg-inset);
+  border-color: var(--line-strong);
+  border-left-color: var(--grade, var(--accent));
+  transform: translateY(-2px);
+}
+
+.card__title {
+  font-size: var(--step-2);
+}
+
+/* The whole card is clickable, but only the title is a real link, so the
+   accessibility tree stays clean and screen-reader users get one target. */
+.card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card__epithet {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: var(--step-0);
+}
+
+.card__desc {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card__meta {
+  margin-block-start: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr));
+}
+
+/* Form controls */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.field__label {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field__hint {
+  font-size: var(--step--2);
+  color: var(--text-faint);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  min-height: 44px;
+  background: var(--bg-inset);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font-size: var(--step-0);
+  border-radius: var(--radius);
+}
+
+.textarea {
+  min-height: 9rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.input[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: #e0736f;
+}
+
+.field__error {
+  font-size: var(--step--2);
+  color: #f0918d;
+  font-family: var(--font-mono);
+}
+
+/* State panels: loading, empty, error. All three are designed, not afterthoughts. */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  padding: var(--sp-7) var(--sp-5);
+  border: 1px dashed var(--line-strong);
+  background: var(--bg-raised);
+}
+
+.state__title {
+  font-size: var(--step-2);
+}
+
+.state__body {
+  color: var(--text-muted);
+  max-width: 52ch;
+}
+
+.state--error {
+  border-color: #8c4a48;
+  border-style: solid;
+}
+
+/* Skeleton loading. Uses a slow sweep that reduced motion turns into a static
+   block, never a flash. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-strong);
+  min-height: 12rem;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--ink-400) 40%, transparent),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: sweep 1.6s var(--ease-in-out) infinite;
+}
+
+@keyframes sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Tape hiss overlay. Density is driven by the fidelity grade, so a speculative
+   entry literally looks noisier than a field recording. Purely decorative. */
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: calc(var(--grade-grain, 0) * 0.5);
+  background-image: radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 255, 255, 0.05) 0.5px,
+      transparent 1px
+    ),
+    radial-gradient(circle at 70% 65%, rgba(255, 255, 255, 0.04) 0.5px, transparent 1px);
+  background-size: 7px 7px, 11px 11px;
+  mix-blend-mode: screen;
+}
+
+/* Filter bar */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  align-items: flex-end;
+  padding: var(--sp-5);
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  min-height: 36px;
+  border: 1px solid var(--line-strong);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.chip:hover,
+.chip:focus-visible {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.chip[aria-pressed="true"],
+.chip[data-active="true"] {
+  color: var(--ink-000);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+:root[data-theme="light"] .chip[aria-pressed="true"],
+:root[data-theme="light"] .chip[data-active="true"] {
+  color: #f4f1ea;
+}
+
+/* Prose */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * {
+  margin-block-start: var(--sp-5);
+}
+
+.prose h2 {
+  font-size: var(--step-3);
+  margin-block-start: var(--sp-7);
+}
+
+.prose h3 {
+  font-size: var(--step-2);
+  margin-block-start: var(--sp-6);
+}
+
+.prose p {
+  font-size: var(--step-0);
+  line-height: 1.7;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--accent);
+  padding-inline-start: var(--sp-5);
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.prose figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-faint);
+  margin-block-start: var(--sp-3);
+}
+
+/* The note block. Visually unmistakable as editorial apparatus rather than
+   narration, because conflating the two is the failure mode this whole
+   project exists to avoid. */
+.note {
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--grade, var(--accent));
+  background: var(--bg-inset);
+  padding: var(--sp-5);
+}
+
+.note__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--grade, var(--accent));
+  margin-block-end: var(--sp-2);
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--line);
+  margin-block-start: var(--sp-10);
+  padding-block: var(--sp-7) var(--sp-6);
+  color: var(--text-muted);
+  font-size: var(--step--1);
+}
+
+.footer__grid {
+  display: grid;
+  gap: var(--sp-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+}
+
+/* --------------------------------------------------------------------------
+   6. Breakpoints
+
+   Five deliberate layouts. Each one changes structure, not just scale.
+   -------------------------------------------------------------------------- */
+
+/* 6a. Large desktop, 1600px and up.
+   The archive gains a persistent left rail of metadata, and detail pages run
+   the citation apparatus in a true second column instead of stacking it. */
+@media (min-width: 1600px) {
+  :root {
+    --shell: 96rem;
+    --measure: 72ch;
+  }
+
+  .entry-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    gap: var(--sp-9);
+    align-items: start;
+  }
+
+  .entry-layout__aside {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(21rem, 100%), 1fr));
+  }
+
+  .hero__index {
+    display: block;
+  }
+}
+
+/* 6b. Small desktop, 1024px to 1599px.
+   Aside becomes narrower and non-sticky below the fold; the hero index column
+   is dropped so the title can take the full measure. */
+@media (min-width: 1024px) and (max-width: 1599px) {
+  .entry-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+
+  .hero__index {
+    display: none;
+  }
+}
+
+/* 6c. Tablet, 768px to 1023px.
+   Two-column card grid, apparatus moves below the body as a full-width band,
+   navigation stays inline but loses letter-spacing to fit. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .entry-layout {
+    display: block;
+  }
+
+  .entry-layout__aside {
+    margin-block-start: var(--sp-7);
+    padding-block-start: var(--sp-6);
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-6);
+  }
+
+  .nav__link {
+    letter-spacing: 0.02em;
+  }
+
+  .hero__index {
+    display: none;
+  }
+}
+
+/* 6d. Mobile portrait, 767px and below.
+   Single column. Navigation collapses behind a disclosure button. Filters
+   become a horizontally scrollable rail with real scroll snapping, because a
+   wrapped chip cloud eats the entire first screen on a phone. */
+@media (max-width: 767px) {
+  :root {
+    --sp-9: 4rem;
+    --sp-10: 5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .entry-layout {
+    display: block;
+  }
+
+  .entry-layout__aside {
+    margin-block-start: var(--sp-6);
+    padding-block-start: var(--sp-5);
+    border-top: 1px solid var(--line);
+  }
+
+  .nav__toggle {
+    display: inline-flex;
+  }
+
+  .nav__list {
+    display: none;
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--line);
+    padding: var(--sp-2) var(--gutter) var(--sp-5);
+  }
+
+  .nav__list[data-open="true"] {
+    display: flex;
+  }
+
+  .nav__list .nav__link {
+    padding-block: var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    font-size: var(--step-0);
+  }
+
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-block-end: var(--sp-2);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .chip {
+    flex: none;
+    scroll-snap-align: start;
+    min-height: 44px;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--sp-4);
+  }
+
+  .hero__index {
+    display: none;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+}
+
+/* 6e. Mobile landscape and any short viewport.
+   Vertical space is the scarce resource here, so the hero stops trying to fill
+   the screen, the sticky nav un-sticks to give the content its height back,
+   and vertical rhythm compresses. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .nav {
+    position: static;
+  }
+
+  .hero {
+    min-height: 0;
+    padding-block: var(--sp-6);
+  }
+
+  :root {
+    --sp-7: 1.75rem;
+    --sp-8: 2.25rem;
+    --sp-9: 2.75rem;
+    --sp-10: 3rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nav__list {
+    max-height: 60dvh;
+    overflow-y: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Reduced motion
+
+   This genuinely removes motion rather than shortening it. Animated states
+   resolve to their final frame, sweeps stop, and smooth scrolling is off.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .skeleton::after {
+    display: none;
+  }
+
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
+
+  [data-motion] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Forced colours: keep the fidelity distinction alive when the user's OS
+   overrides our palette entirely. */
+@media (forced-colors: active) {
+  .grade-badge,
+  .card,
+  .chip,
+  .btn {
+    border: 1px solid CanvasText;
+  }
+
+  .grain {
+    display: none;
+  }
+}

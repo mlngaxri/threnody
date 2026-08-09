@@ -319,7 +319,7 @@ function tokenize(input: string): string[] {
  * Normalise text for matching.
  *
  * Strips combining diacritics via NFD, and separately removes the modifier
- * letters and typographic apostrophes that NFD leaves intact. The ʻokina in
+ * letters and typographic apostrophes that NFD leaves intact, the ʻokina in
  * "Kauaʻi" is U+02BB, a letter in its own right, so without this a reader
  * typing "kauai" would get no results.
  */
