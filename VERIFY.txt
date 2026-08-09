@@ -1,6 +1,7 @@
 ===== reachability =====
 404 https://threnody-theta.vercel.app
 200 https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
+ERR # run 3: page weight after collapsing spectrogram cells into opacity bands Failed to parse URL from # run 3: page weight after collapsing spectrogram cells into opacity bands/
 
 USING https://threnody-git-vercel-react-server-263186-rexs-projects-941bfa7c.vercel.app
 
@@ -52,14 +53,14 @@ PASS header permissions-policy
 
 ===== contact endpoint =====
 complete valid payload -> 201
-{"ok":true,"data":{"reference":"THR-2026-1GBE3B0","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-0SUYVF6","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS valid contact accepted
 PASS contact returns a reference
 invalid payload -> 422
 {"ok":false,"error":{"code":"VALIDATION_FAILED","message":"Please correct the highlighted fields.","fields":{"name":"Please enter your name.","email":"Please enter a valid email address, for example name@example.org.","message":"Message must be at least 20 characters. You have 2."}}}
 PASS invalid contact returns 422
 html in fields -> 201
-{"ok":true,"data":{"reference":"THR-2026-0EQFM4N","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
+{"ok":true,"data":{"reference":"THR-2026-04K86BE","received":true,"subject":"correction","entrySlug":null,"message":"Thank you. Your enquiry has been recorded and a curator will respond by email."}}
 PASS no raw script tag echoed back
 
 ===== robots =====
