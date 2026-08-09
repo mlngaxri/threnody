@@ -16,7 +16,7 @@ https://nextjs.org/telemetry
    ▲ Next.js 15.5.9
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 5.3s
+ ✓ Compiled successfully in 6.0s
    Linting and checking validity of types ...
 Failed to compile.
 
