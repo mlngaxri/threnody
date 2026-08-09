@@ -19,6 +19,9 @@ interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
+/** Six categories, fixed. Anything else is a genuine 404, not a soft render. */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return getCategories().map((category) => ({ slug: category.slug }));
 }
